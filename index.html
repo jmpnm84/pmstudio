@@ -129,13 +129,13 @@
 
         <!-- Perfil na Sidebar -->
         <div class="pt-4 border-t border-dark-border flex items-center space-x-3 px-2">
-            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-brand-500 border border-brand-500/30 shrink-0">
-                JS
+            <div id="sidebar-avatar" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-brand-500 border border-brand-500/30 shrink-0">
+                --
             </div>
             <div class="truncate flex-1">
-                <p class="text-sm font-semibold text-white truncate">João Silva</p>
+                <p id="sidebar-name" class="text-sm font-semibold text-white truncate">--</p>
                 <p class="text-xs text-brand-500 flex items-center gap-1">
-                    <i class="fa-solid fa-fire"></i> <span id="sidebar-streak">5</span> dias seguidos
+                    <i class="fa-solid fa-fire"></i> <span id="sidebar-streak">0</span> dias seguidos
                 </p>
                 <!-- Versão adicionada -->
                 <p class="text-[10px] text-slate-500 font-mono mt-0.5">v0.0.1</p>
@@ -152,11 +152,11 @@
         <div class="flex items-center space-x-3">
             <div class="bg-slate-800 px-3 py-1 rounded-full border border-dark-border flex items-center space-x-1.5 text-xs text-brand-400 font-medium">
                 <i class="fa-solid fa-fire text-amber-500"></i>
-                <span id="mobile-streak">5</span> dias
+                <span id="mobile-streak">0</span> dias
             </div>
             <div class="flex flex-col items-center">
-                <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-xs text-brand-500 border border-brand-500/30">
-                    JS
+                <div id="mobile-avatar" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-xs text-brand-500 border border-brand-500/30">
+                    --
                 </div>
                 <!-- Versão adicionada para Mobile -->
                 <span class="text-[9px] text-slate-500 font-mono -mt-0.5">v0.0.1</span>
@@ -172,7 +172,7 @@
             <!-- Boas vindas -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-dark-card via-slate-900 to-dark-card p-6 rounded-2xl border border-dark-border shadow-xl">
                 <div>
-                    <h2 class="text-2xl md:text-3xl font-extrabold text-white">Olá, João! 👋</h2>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white">Olá, <span id="dash-greeting-name">Utilizador</span>! 👋</h2>
                     <p class="text-slate-400 text-sm mt-1">Hoje é dia de <span class="text-brand-400 font-semibold">Treino A: Peito e Tríceps</span>. Mantenha o foco!</p>
                 </div>
                 <button onclick="switchTab('workouts')" class="px-5 py-3 bg-brand-500 hover:bg-brand-600 text-black font-bold rounded-xl flex items-center justify-center gap-2 transition neon-glow w-full md:w-auto">
@@ -555,19 +555,19 @@
                         <i class="fa-solid fa-award"></i>
                     </div>
                     <div>
-                        <span class="text-xs text-brand-400 font-bold uppercase tracking-wider">Nível Atleta Pro</span>
-                        <h3 class="text-2xl font-extrabold text-white">Nível <span id="user-level">4</span></h3>
-                        <p class="text-xs text-slate-400">Total de Pontos XP: <span id="user-xp" class="text-white font-bold">1,450</span> XP</p>
+                        <span id="user-level-title" class="text-xs text-brand-400 font-bold uppercase tracking-wider">Atleta PM Studio</span>
+                        <h3 class="text-2xl font-extrabold text-white">Nível <span id="user-level">1</span></h3>
+                        <p class="text-xs text-slate-400">Total de Pontos XP: <span id="user-xp" class="text-white font-bold">0</span> XP</p>
                     </div>
                 </div>
 
                 <div class="w-full sm:w-64">
                     <div class="flex justify-between text-xs text-slate-400 mb-1">
-                        <span>Progresso para Nível 5</span>
-                        <span class="text-brand-400"><span id="user-xp-bar-text">1450</span>/2000 XP</span>
+                        <span>Progresso de Nível</span>
+                        <span class="text-brand-400"><span id="user-xp-bar-text">0</span> XP</span>
                     </div>
                     <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
-                        <div id="user-xp-bar" class="h-full bg-brand-500 rounded-full transition-all duration-300" style="width: 72.5%;"></div>
+                        <div id="user-xp-bar" class="h-full bg-brand-500 rounded-full transition-all duration-300" style="width: 0%;"></div>
                     </div>
                 </div>
             </div>
@@ -607,6 +607,56 @@
             <span class="text-[10px] mt-0.5 block">Desafios</span>
         </button>
     </nav>
+
+    <!-- MODAL PRIMEIRA INICIALIZAÇÃO (ONBOARDING) -->
+    <div id="onboarding-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-dark-card border border-brand-500/30 p-6 md:p-8 rounded-2xl w-full max-w-lg space-y-5 relative shadow-2xl">
+            <div class="text-center space-y-2">
+                <div class="w-16 h-16 bg-brand-500/10 border border-brand-500/30 rounded-2xl flex items-center justify-center mx-auto text-brand-500 text-3xl font-extrabold neon-glow">
+                    <i class="fa-solid fa-dumbbell"></i>
+                </div>
+                <h3 class="text-2xl font-extrabold text-white">Bem-vindo ao PM Studio!</h3>
+                <p class="text-xs text-slate-400">Configure o seu perfil inicial para personalizar os seus treinos e métricas.</p>
+            </div>
+
+            <form id="form-onboarding" onsubmit="handleOnboardingSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">O seu Nome</label>
+                    <input type="text" id="onboard-name" required placeholder="Ex: João Silva" class="w-full bg-slate-800 border border-dark-border text-white text-sm p-3 rounded-xl outline-none focus:border-brand-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Peso Inicial (kg)</label>
+                        <input type="number" step="0.1" id="onboard-weight" required placeholder="Ex: 75.0" class="w-full bg-slate-800 border border-dark-border text-white text-sm p-3 rounded-xl outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">% Gordura (Opcional)</label>
+                        <input type="number" step="0.1" id="onboard-fat" placeholder="Ex: 15.0" class="w-full bg-slate-800 border border-dark-border text-white text-sm p-3 rounded-xl outline-none focus:border-brand-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Braço (cm)</label>
+                        <input type="number" step="0.5" id="onboard-arm" placeholder="Ex: 35" class="w-full bg-slate-800 border border-dark-border text-white text-sm p-2.5 rounded-xl outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Cintura (cm)</label>
+                        <input type="number" step="0.5" id="onboard-waist" placeholder="Ex: 80" class="w-full bg-slate-800 border border-dark-border text-white text-sm p-2.5 rounded-xl outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Peito (cm)</label>
+                        <input type="number" step="0.5" id="onboard-chest" placeholder="Ex: 98" class="w-full bg-slate-800 border border-dark-border text-white text-sm p-2.5 rounded-xl outline-none focus:border-brand-500">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-brand-500 hover:bg-brand-600 text-black font-extrabold rounded-xl text-sm transition mt-2 neon-glow flex items-center justify-center gap-2">
+                    Começar a Utilizar <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
 
     <!-- MODAL REGISTAR NOVA MEDIDA -->
     <div id="add-metric-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
@@ -800,52 +850,19 @@
         const db = new FitPulseDB();
 
         /* =============================================================
-           2. POPULAÇÃO INICIAL DE DEMONSTRAÇÃO (SEED DATA)
+           2. INICIALIZAÇÃO DA ESTRUTURA BASE DA APLICAÇÃO
            ============================================================= */
-        async function seedDatabaseIfEmpty() {
-            const perfil = await db.get('perfil', 'user_profile');
-            if (!perfil) {
-                // Perfil do Utilizador
-                await db.put('perfil', {
-                    id: 'user_profile',
-                    name: "João Silva",
-                    streak: 5,
-                    xp: 1450,
-                    level: 4,
-                    completedWorkoutsMonth: 14
-                });
-
-                // Histórico de Peso
-                const initialWeight = [
-                    { date: "2026-09-01", weight: 81.2, fat: 16.5, arm: 37, waist: 84, chest: 100 },
-                    { date: "2026-09-15", weight: 80.0, fat: 15.8, arm: 37.5, waist: 83, chest: 101 },
-                    { date: "2026-10-01", weight: 79.1, fat: 15.1, arm: 38.0, waist: 82, chest: 101.5 },
-                    { date: "2026-10-15", weight: 78.5, fat: 14.5, arm: 38.5, waist: 81, chest: 102 }
-                ];
-                for (const w of initialWeight) await db.add('peso', w);
-
-                // Evolução de Força
-                const initialStrength = [
-                    { exercise: "Supino Reto com Barra", date: "2026-08-10", load: 70 },
-                    { exercise: "Supino Reto com Barra", date: "2026-09-12", load: 75 },
-                    { exercise: "Supino Reto com Barra", date: "2026-10-15", load: 80 },
-                    { exercise: "Agachamento Livre", date: "2026-08-10", load: 90 },
-                    { exercise: "Agachamento Livre", date: "2026-09-12", load: 100 },
-                    { exercise: "Agachamento Livre", date: "2026-10-15", load: 110 },
-                    { exercise: "Levantamento Terra", date: "2026-08-10", load: 110 },
-                    { exercise: "Levantamento Terra", date: "2026-09-12", load: 120 },
-                    { exercise: "Levantamento Terra", date: "2026-10-15", load: 130 }
-                ];
-                for (const s of initialStrength) await db.add('forca', s);
-
-                // Fichas de Treino
+        async function setupBaseStructuresIfEmpty() {
+            const treinos = await db.getAll('treinos');
+            if (treinos.length === 0) {
+                // Fichas de Treino Base
                 await db.put('treinos', {
                     routineCode: 'A',
                     title: "Treino A - Peito & Tríceps",
                     exercises: [
-                        { id: "ex1", name: "Supino Reto com Barra", desc: "Mantenha as escápulas retraídas, pés firmes no chão e desça a barra até ao esterno com controlo.", sets: [ {kg: 80, reps: 10, done: true}, {kg: 80, reps: 8, done: true}, {kg: 80, reps: 8, done: false} ] },
-                        { id: "ex2", name: "Supino Inclinado c/ Halteres", desc: "Ajuste o banco em ~30 graus. Mantenha os cotovelos a 45° do tronco.", sets: [ {kg: 26, reps: 12, done: false}, {kg: 26, reps: 10, done: false} ] },
-                        { id: "ex3", name: "Tríceps na Polia Alta", desc: "Mantenha os cotovelos fixos ao lado do corpo. Estenda totalmente os braços focando na contração.", sets: [ {kg: 35, reps: 12, done: false}, {kg: 35, reps: 12, done: false} ] }
+                        { id: "ex1", name: "Supino Reto com Barra", desc: "Mantenha as escápulas retraídas, pés firmes no chão e desça a barra até ao esterno com controlo.", sets: [ {kg: 0, reps: 10, done: false}, {kg: 0, reps: 8, done: false}, {kg: 0, reps: 8, done: false} ] },
+                        { id: "ex2", name: "Supino Inclinado c/ Halteres", desc: "Ajuste o banco em ~30 graus. Mantenha os cotovelos a 45° do tronco.", sets: [ {kg: 0, reps: 12, done: false}, {kg: 0, reps: 10, done: false} ] },
+                        { id: "ex3", name: "Tríceps na Polia Alta", desc: "Mantenha os cotovelos fixos ao lado do corpo. Estenda totalmente os braços focando na contração.", sets: [ {kg: 0, reps: 12, done: false}, {kg: 0, reps: 12, done: false} ] }
                     ]
                 });
 
@@ -853,9 +870,9 @@
                     routineCode: 'B',
                     title: "Treino B - Costas & Bíceps",
                     exercises: [
-                        { id: "ex4", name: "Puxada à Frente na Polia", desc: "Puxe a barra em direção ao peito puxando os cotovelos para baixo e para trás.", sets: [ {kg: 65, reps: 10, done: false}, {kg: 65, reps: 10, done: false} ] },
-                        { id: "ex5", name: "Remada Curvada com Barra", desc: "Coluna neutra, inclinação a 45 graus. Puxe a barra em direção ao umbigo.", sets: [ {kg: 60, reps: 10, done: false}, {kg: 60, reps: 10, done: false} ] },
-                        { id: "ex6", name: "Bíceps Direto c/ Barra EZ", desc: "Mantenha a postura ereta sem balançar o tronco durante a execução.", sets: [ {kg: 30, reps: 12, done: false}, {kg: 30, reps: 10, done: false} ] }
+                        { id: "ex4", name: "Puxada à Frente na Polia", desc: "Puxe a barra em direção ao peito puxando os cotovelos para baixo e para trás.", sets: [ {kg: 0, reps: 10, done: false}, {kg: 0, reps: 10, done: false} ] },
+                        { id: "ex5", name: "Remada Curvada com Barra", desc: "Coluna neutra, inclinação a 45 graus. Puxe a barra em direção ao umbigo.", sets: [ {kg: 0, reps: 10, done: false}, {kg: 0, reps: 10, done: false} ] },
+                        { id: "ex6", name: "Bíceps Direto c/ Barra EZ", desc: "Mantenha a postura ereta sem balançar o tronco durante a execução.", sets: [ {kg: 0, reps: 12, done: false}, {kg: 0, reps: 10, done: false} ] }
                     ]
                 });
 
@@ -863,32 +880,63 @@
                     routineCode: 'C',
                     title: "Treino C - Pernas & Ombros",
                     exercises: [
-                        { id: "ex7", name: "Agachamento Livre", desc: "Pés à largura dos ombros, joelhos a acompanhar a ponta dos pés, descer com profundidade.", sets: [ {kg: 100, reps: 8, done: false}, {kg: 100, reps: 8, done: false} ] },
-                        { id: "ex8", name: "Prensa de Pernas (Leg Press)", desc: "Empurre a plataforma com os calcanhares sem bloquear totalmente os joelhos.", sets: [ {kg: 180, reps: 12, done: false}, {kg: 180, reps: 10, done: false} ] },
-                        { id: "ex9", name: "Press Militar de Ombros", desc: "Com halteres ou barra, eleve o peso acima da cabeça com o core ativado.", sets: [ {kg: 22, reps: 10, done: false}, {kg: 22, reps: 10, done: false} ] }
+                        { id: "ex7", name: "Agachamento Livre", desc: "Pés à largura dos ombros, joelhos a acompanhar a ponta dos pés, descer com profundidade.", sets: [ {kg: 0, reps: 8, done: false}, {kg: 0, reps: 8, done: false} ] },
+                        { id: "ex8", name: "Prensa de Pernas (Leg Press)", desc: "Empurre a plataforma com os calcanhares sem bloquear totalmente os joelhos.", sets: [ {kg: 0, reps: 12, done: false}, {kg: 0, reps: 10, done: false} ] },
+                        { id: "ex9", name: "Press Militar de Ombros", desc: "Com halteres ou barra, eleve o peso acima da cabeça com o core ativado.", sets: [ {kg: 0, reps: 10, done: false}, {kg: 0, reps: 10, done: false} ] }
                     ]
                 });
+            }
 
+            const aulas = await db.getAll('aulas');
+            if (aulas.length === 0) {
                 // Aulas de Grupo
                 const initialClasses = [
                     { id: 1, name: "Spinning High Energy", instructor: "Prof. Ricardo", time: "Hoje • 18:30", category: "Spinning", spots: 3, totalSpots: 15, booked: false },
-                    { id: 2, name: "Yoga Alignment & Flow", instructor: "Prof.ª Maria", time: "Amanhã • 09:00", category: "Yoga", spots: 5, totalSpots: 10, booked: true },
+                    { id: 2, name: "Yoga Alignment & Flow", instructor: "Prof.ª Maria", time: "Amanhã • 09:00", category: "Yoga", spots: 5, totalSpots: 10, booked: false },
                     { id: 3, name: "Pilates Core Focus", instructor: "Prof.ª Sofia", time: "Amanhã • 17:00", category: "Pilates", spots: 2, totalSpots: 12, booked: false },
                     { id: 4, name: "CrossFit WOD Express", instructor: "Prof. André", time: "Sexta • 19:00", category: "CrossFit", spots: 1, totalSpots: 8, booked: false }
                 ];
                 for (const c of initialClasses) await db.put('aulas', c);
-
-                // Nutrição Hoje
-                const todayKey = new Date().toISOString().split('T')[0];
-                await db.put('nutricao', {
-                    date: todayKey,
-                    water: 2.0,
-                    cals: 1850,
-                    prot: 140,
-                    carbs: 210,
-                    fat: 48
-                });
             }
+        }
+
+        async function checkFirstTimeUser() {
+            const perfil = await db.get('perfil', 'user_profile');
+            if (!perfil) {
+                openModal('onboarding-modal');
+            }
+        }
+
+        async function handleOnboardingSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('onboard-name').value.trim();
+            const weight = parseFloat(document.getElementById('onboard-weight').value);
+            const fat = parseFloat(document.getElementById('onboard-fat').value) || null;
+            const arm = parseFloat(document.getElementById('onboard-arm').value) || null;
+            const waist = parseFloat(document.getElementById('onboard-waist').value) || null;
+            const chest = parseFloat(document.getElementById('onboard-chest').value) || null;
+
+            if (!name || isNaN(weight)) return;
+
+            // Guardar Perfil
+            await db.put('perfil', {
+                id: 'user_profile',
+                name: name,
+                streak: 1,
+                xp: 100,
+                level: 1,
+                completedWorkoutsMonth: 0
+            });
+
+            // Guardar Peso e Medidas Iniciais
+            const todayKey = new Date().toISOString().split('T')[0];
+            await db.add('peso', { date: todayKey, weight, fat, arm, waist, chest });
+
+            closeModal('onboarding-modal');
+            showToast("Bem-vindo! O seu perfil foi configurado com sucesso.");
+
+            await refreshUI();
+            await renderWorkoutRoutine(currentActiveRoutine);
         }
 
         /* =============================================================
@@ -897,6 +945,15 @@
         let weightChartInstance = null;
         let strengthChartInstance = null;
         let currentActiveRoutine = 'A';
+
+        function getInitials(name) {
+            if (!name) return '--';
+            const parts = name.trim().split(' ');
+            if (parts.length >= 2) {
+                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return parts[0].substring(0, 2).toUpperCase();
+        }
 
         async function refreshUI() {
             const profile = await db.get('perfil', 'user_profile');
@@ -910,16 +967,21 @@
 
             // Atualização de Perfil / Dashboard
             if (profile) {
-                document.getElementById('sidebar-streak').innerText = profile.streak;
-                document.getElementById('mobile-streak').innerText = profile.streak;
+                document.getElementById('sidebar-name').innerText = profile.name;
+                document.getElementById('dash-greeting-name').innerText = profile.name.split(' ')[0];
+                document.getElementById('sidebar-avatar').innerText = getInitials(profile.name);
+                document.getElementById('mobile-avatar').innerText = getInitials(profile.name);
+
+                document.getElementById('sidebar-streak').innerText = profile.streak || 0;
+                document.getElementById('mobile-streak').innerText = profile.streak || 0;
                 document.getElementById('dash-workouts-count').innerText = profile.completedWorkoutsMonth || 0;
-                document.getElementById('user-xp').innerText = profile.xp;
-                document.getElementById('user-level').innerText = profile.level;
+                document.getElementById('user-xp').innerText = profile.xp || 0;
+                document.getElementById('user-level').innerText = profile.level || 1;
                 
-                const nextLevelXP = profile.level * 500;
-                const xpPct = Math.min(100, (profile.xp / nextLevelXP) * 100);
+                const nextLevelXP = (profile.level || 1) * 500;
+                const xpPct = Math.min(100, ((profile.xp || 0) / nextLevelXP) * 100);
                 document.getElementById('user-xp-bar').style.width = `${xpPct}%`;
-                document.getElementById('user-xp-bar-text').innerText = profile.xp;
+                document.getElementById('user-xp-bar-text').innerText = profile.xp || 0;
             }
 
             // ÚLTIMO PESO REGISTADO
@@ -928,6 +990,8 @@
                 weights.sort((a, b) => new Date(a.date) - new Date(b.date));
                 const latest = weights[weights.length - 1];
                 document.getElementById('dash-weight').innerText = latest.weight;
+            } else {
+                document.getElementById('dash-weight').innerText = '--';
             }
 
             // DADOS DE NUTRIÇÃO
@@ -1134,13 +1198,15 @@
         }
 
         async function finishWorkout() {
-            const profile = await db.get('perfil', 'user_profile');
-            profile.xp += 50;
-            profile.streak += 1;
+            let profile = await db.get('perfil', 'user_profile');
+            if (!profile) return;
+
+            profile.xp = (profile.xp || 0) + 50;
+            profile.streak = (profile.streak || 0) + 1;
             profile.completedWorkoutsMonth = (profile.completedWorkoutsMonth || 0) + 1;
             
-            if (profile.xp >= profile.level * 500) {
-                profile.level += 1;
+            if (profile.xp >= (profile.level || 1) * 500) {
+                profile.level = (profile.level || 1) + 1;
             }
 
             await db.put('perfil', profile);
@@ -1369,12 +1435,14 @@
         async function renderAchievements() {
             const profile = await db.get('perfil', 'user_profile');
             const streak = profile ? profile.streak : 0;
+            const completed = profile ? profile.completedWorkoutsMonth || 0 : 0;
 
             const achievements = [
                 { id: "a1", title: "Consistência de Ferro", desc: "Completou 5 dias seguidos de treino", icon: "fa-fire", unlocked: streak >= 5 },
-                { id: "a2", title: "Clube dos 100kg", desc: "Atingiu 100kg num exercício", icon: "fa-dumbbell", unlocked: true },
-                { id: "a3", title: "Mestre da Hidratação", desc: "Bebeu mais de 3.0L de água num dia", icon: "fa-glass-water", unlocked: false },
-                { id: "a4", title: "Atleta de Grupo", desc: "Reservou aulas de grupo no ginásio", icon: "fa-users", unlocked: true }
+                { id: "a2", title: "Primeiro Registo", desc: "Criou o seu perfil no PM Studio", icon: "fa-user-check", unlocked: !!profile },
+                { id: "a3", title: "Atleta Consistente", desc: "Realizou mais de 10 treinos", icon: "fa-dumbbell", unlocked: completed >= 10 },
+                { id: "a4", title: "Mestre da Hidratação", desc: "Bebeu mais de 3.0L de água num dia", icon: "fa-glass-water", unlocked: false },
+                { id: "a5", title: "Atleta de Grupo", desc: "Reservou aulas de grupo no ginásio", icon: "fa-users", unlocked: false }
             ];
 
             const container = document.getElementById('badges-container');
@@ -1453,10 +1521,13 @@
             try {
                 // Inicializa IndexedDB
                 await db.init();
-                // Popula se estiver vazio
-                await seedDatabaseIfEmpty();
+                // Popula estrutura base (fichas e aulas) se vazias
+                await setupBaseStructuresIfEmpty();
                 
                 document.getElementById('input-metric-date').value = new Date().toISOString().split('T')[0];
+
+                // Verifica se é a primeira utilização para abrir o formulário de onboarding
+                await checkFirstTimeUser();
 
                 // Atualiza UI com base nos dados guardados
                 await refreshUI();
