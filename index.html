@@ -1,27 +1,25 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt" class="dark h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PM Studio - O Seu Companion de Treino</title>
-
-    <!-- PWA Manifest & Meta Tags -->
-    <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#121212">
+    <title>PM Studio - Personal Fitness & Performance</title>
+    
+    <!-- PWA Manifest & Theme -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#111827">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="PM Studio">
-    <link rel="apple-touch-icon" href="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- FontAwesome CDN para Ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Fonte Google Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -29,1505 +27,1223 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#f7ffe5',
-                            400: '#d4ff33',
-                            500: '#ccff00', /* Neon Lime */
-                            600: '#a3cc00',
-                            neon: '#ccff00',
-                            accent: '#00f0ff'
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                            accent: '#10b981'
                         },
                         dark: {
-                            bg: '#121212',
-                            card: '#1e1e1e',
-                            border: '#2a2a2a',
-                            hover: '#282828'
+                            bg: '#0b0f17',
+                            card: '#111827',
+                            border: '#1f2937',
+                            muted: '#374151'
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif']
                     }
                 }
             }
         }
     </script>
 
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         body {
-            background-color: #121212;
-            color: #f8fafc;
             font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            background-color: #0b0f17;
+            color: #f3f4f6;
+            touch-action: manipulation;
         }
-
-        .neon-glow {
-            box-shadow: 0 0 15px rgba(204, 255, 0, 0.25);
-        }
-        
-        .neon-glow-lg {
-            box-shadow: 0 0 25px rgba(204, 255, 0, 0.35);
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #1e1e1e;
+        ::-webkit-scrollbar-track {
+            background: #0b0f17;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #2a2a2a;
-            border-radius: 9999px;
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 3px;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #ccff00;
-        }
-
-        .tab-content {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.25s ease-in-out;
-        }
-        .tab-content.active {
-            display: block;
-            opacity: 1;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #10b981;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col md:flex-row pb-20 md:pb-0 custom-scrollbar">
+<body class="h-full bg-dark-bg text-gray-100 flex flex-col antialiased selection:bg-brand-500 selection:text-white">
 
-    <!-- BANNER DE INSTALAÇÃO PWA -->
-    <div id="pwa-install-banner" class="hidden fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-brand-500 to-brand-accent p-3 text-black font-semibold flex items-center justify-between shadow-2xl">
+    <!-- App Header -->
+    <header class="sticky top-0 z-30 bg-dark-card/90 backdrop-blur-md border-b border-dark-border px-4 py-3 flex items-center justify-between">
         <div class="flex items-center space-x-3">
-            <img src="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c" width="32" height="32" alt="PM Studio Logo" class="w-8 h-8 rounded-full border border-emerald-500/30 object-cover">
-            <span class="text-xs md:text-sm font-bold">Instale a aplicação PM Studio no seu dispositivo!</span>
+            <img src="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c" alt="PM Studio Logo" class="h-10 w-10 object-contain rounded-lg bg-gray-900 p-0.5 border border-brand-500/30">
+            <div>
+                <h1 class="text-lg font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                    PM STUDIO <span class="text-xs px-2 py-0.5 rounded bg-brand-500/10 text-brand-500 font-medium border border-brand-500/20">PRO</span>
+                </h1>
+                <p id="header-user-name" class="text-xs text-gray-400">Atleta</p>
+            </div>
         </div>
+
         <div class="flex items-center space-x-2">
-            <button onclick="installPWA()" class="px-3 py-1 bg-black text-brand-500 hover:bg-slate-900 rounded-lg text-xs font-bold transition">Instalar</button>
-            <button onclick="dismissInstallBanner()" class="p-1 text-black hover:text-slate-800 text-sm">
-                <i class="fa-solid fa-xmark"></i>
+            <!-- Offline / Sync Indicator -->
+            <span id="sync-badge" class="hidden md:inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-500/10 text-brand-500 border border-brand-500/20">
+                <i class="fa-solid fa-circle text-[8px] mr-1.5 animate-pulse"></i> Online
+            </span>
+            <!-- Profile Settings Trigger -->
+            <button id="btn-open-profile" class="p-2 rounded-lg bg-gray-800/80 hover:bg-gray-700 text-gray-300 hover:text-brand-500 transition-colors">
+                <i class="fa-solid fa-user-gear text-lg"></i>
             </button>
-        </div>
-    </div>
-
-    <!-- BARRA LATERAL (Desktop) -->
-    <aside class="hidden md:flex flex-col w-64 bg-dark-card border-r border-dark-border p-5 justify-between h-screen sticky top-0 z-30">
-        <div>
-            <!-- Logo -->
-            <div class="flex items-center space-x-3 mb-8 px-2">
-                <img src="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c" width="32" height="32" alt="PM Studio Logo" class="w-8 h-8 rounded-full border border-emerald-500/30 object-cover">
-                <div>
-                    <h1 class="text-xl font-bold tracking-wider text-white">PM <span class="text-brand-500">STUDIO</span></h1>
-                    <p class="text-xs text-slate-400">Gym & Fitness Companion</p>
-                </div>
-            </div>
-
-            <!-- Navegação Desktop -->
-            <nav class="space-y-2">
-                <button onclick="switchTab('dashboard')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-300 hover:bg-dark-hover active-nav text-brand-400 font-bold" data-tab="dashboard">
-                    <i class="fa-solid fa-chart-pie text-lg"></i>
-                    <span class="font-medium text-sm">Dashboard</span>
-                </button>
-                <button onclick="switchTab('workouts')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-300 hover:bg-dark-hover" data-tab="workouts">
-                    <i class="fa-solid fa-dumbbell text-lg"></i>
-                    <span class="font-medium text-sm">Diário de Treino</span>
-                </button>
-                <button onclick="switchTab('metrics')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-300 hover:bg-dark-hover" data-tab="metrics">
-                    <i class="fa-solid fa-chart-line text-lg"></i>
-                    <span class="font-medium text-sm">Evolução & Métricas</span>
-                </button>
-                <button onclick="switchTab('classes')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-300 hover:bg-dark-hover" data-tab="classes">
-                    <i class="fa-solid fa-calendar-check text-lg"></i>
-                    <span class="font-medium text-sm">Aulas de Grupo</span>
-                </button>
-                <button onclick="switchTab('nutrition')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-300 hover:bg-dark-hover" data-tab="nutrition">
-                    <i class="fa-solid fa-apple-whole text-lg"></i>
-                    <span class="font-medium text-sm">Nutrição & Água</span>
-                </button>
-                <button onclick="switchTab('achievements')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-300 hover:bg-dark-hover" data-tab="achievements">
-                    <i class="fa-solid fa-trophy text-lg"></i>
-                    <span class="font-medium text-sm">Desafios & Badges</span>
-                </button>
-            </nav>
-        </div>
-
-        <!-- Perfil na Sidebar -->
-        <div class="pt-4 border-t border-dark-border flex items-center space-x-3 px-2">
-            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-brand-500 border border-brand-500/30">
-                JS
-            </div>
-            <div class="truncate">
-                <p class="text-sm font-semibold text-white truncate">João Silva</p>
-                <p class="text-xs text-brand-500 flex items-center gap-1">
-                    <i class="fa-solid fa-fire"></i> <span id="sidebar-streak">5</span> dias seguidos
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    <!-- HEADER MOBILE -->
-    <header class="md:hidden bg-dark-card border-b border-dark-border p-4 flex justify-between items-center sticky top-0 z-30">
-        <div class="flex items-center space-x-2">
-            <img src="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c" width="32" height="32" alt="PM Studio Logo" class="w-8 h-8 rounded-full border border-emerald-500/30 object-cover">
-            <span class="font-bold text-lg tracking-wider text-white">PM <span class="text-brand-500">STUDIO</span></span>
-        </div>
-        <div class="flex items-center space-x-3">
-            <div class="bg-slate-800 px-3 py-1 rounded-full border border-dark-border flex items-center space-x-1.5 text-xs text-brand-400 font-medium">
-                <i class="fa-solid fa-fire text-amber-500"></i>
-                <span id="mobile-streak">5</span> dias
-            </div>
-            <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-xs text-brand-500 border border-brand-500/30">
-                JS
-            </div>
         </div>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main class="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full overflow-x-hidden">
+    <!-- Main Container -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 pb-24 overflow-y-auto">
 
-        <!-- 1. DASHBOARD -->
-        <section id="tab-dashboard" class="tab-content active space-y-6">
-            <!-- Boas vindas -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-dark-card via-slate-900 to-dark-card p-6 rounded-2xl border border-dark-border shadow-xl">
-                <div>
-                    <h2 class="text-2xl md:text-3xl font-extrabold text-white">Olá, João! 👋</h2>
-                    <p class="text-slate-400 text-sm mt-1">Hoje é dia de <span class="text-brand-400 font-semibold">Treino A: Peito e Tríceps</span>. Mantenha o foco!</p>
+        <!-- Navigation Tabs -->
+        <nav class="flex border-b border-dark-border mb-6 overflow-x-auto no-scrollbar space-x-2 text-sm font-medium">
+            <button class="nav-tab active border-b-2 border-brand-500 text-brand-500 pb-3 px-3 flex items-center gap-2 whitespace-nowrap" data-target="tab-dashboard">
+                <i class="fa-solid fa-chart-line"></i> Dashboard
+            </button>
+            <button class="nav-tab text-gray-400 hover:text-gray-200 border-b-2 border-transparent pb-3 px-3 flex items-center gap-2 whitespace-nowrap" data-target="tab-workouts">
+                <i class="fa-solid fa-dumbbell"></i> Treinos & 1RM
+            </button>
+            <button class="nav-tab text-gray-400 hover:text-gray-200 border-b-2 border-transparent pb-3 px-3 flex items-center gap-2 whitespace-nowrap" data-target="tab-classes">
+                <i class="fa-solid fa-calendar-check"></i> Aulas de Grupo
+            </button>
+            <button class="nav-tab text-gray-400 hover:text-gray-200 border-b-2 border-transparent pb-3 px-3 flex items-center gap-2 whitespace-nowrap" data-target="tab-nutrition">
+                <i class="fa-solid fa-utensils"></i> Nutrição & Água
+            </button>
+        </nav>
+
+        <!-- PWA Install Banner -->
+        <div id="pwa-install-banner" class="hidden mb-6 p-4 rounded-xl bg-gradient-to-r from-gray-900 to-gray-800 border border-brand-500/40 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg">
+            <div class="flex items-center gap-3">
+                <div class="p-3 bg-brand-500/20 text-brand-500 rounded-lg">
+                    <i class="fa-solid fa-mobile-screen-button text-2xl"></i>
                 </div>
-                <button onclick="switchTab('workouts')" class="px-5 py-3 bg-brand-500 hover:bg-brand-600 text-black font-bold rounded-xl flex items-center justify-center gap-2 transition neon-glow w-full md:w-auto">
-                    <i class="fa-solid fa-play"></i> Iniciar Treino de Hoje
-                </button>
+                <div>
+                    <h3 class="font-semibold text-white">Instalar PM Studio App</h3>
+                    <p class="text-xs text-gray-400">Instale na ecrã principal para acesso offline instantâneo e melhor performance.</p>
+                </div>
             </div>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+                <button id="pwa-install-btn" class="flex-1 sm:flex-none px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white font-medium text-xs rounded-lg transition-all shadow-md">Instalar</button>
+                <button id="pwa-dismiss-btn" class="px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-400 text-xs rounded-lg">Depois</button>
+            </div>
+        </div>
 
-            <!-- Métricas Rápidas -->
+        <!-- TAB 1: DASHBOARD -->
+        <section id="tab-dashboard" class="tab-content space-y-6">
+            <!-- Profile Summary & Quick Stats -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="bg-dark-card p-4 rounded-2xl border border-dark-border">
-                    <div class="flex items-center justify-between text-slate-400 text-xs mb-2">
+                <div class="bg-dark-card border border-dark-border rounded-xl p-4 flex flex-col justify-between shadow-sm">
+                    <div class="flex items-center justify-between text-gray-400 text-xs font-medium">
                         <span>Peso Atual</span>
-                        <i class="fa-solid fa-weight-scale text-brand-400"></i>
+                        <i class="fa-solid fa-weight-scale text-brand-500"></i>
                     </div>
-                    <div class="text-2xl font-bold text-white"><span id="dash-weight">--</span> <span class="text-xs text-slate-400 font-normal">kg</span></div>
-                    <span class="text-xs text-brand-400 flex items-center gap-1 mt-1"><i class="fa-solid fa-database text-[10px]"></i> IndexedDB Ativo</span>
+                    <div class="mt-2">
+                        <span id="stat-weight" class="text-2xl font-bold text-white">--</span>
+                        <span class="text-xs text-gray-400">kg</span>
+                    </div>
+                    <span id="stat-weight-diff" class="text-[10px] text-gray-500 mt-1">Sem registos</span>
                 </div>
 
-                <div class="bg-dark-card p-4 rounded-2xl border border-dark-border">
-                    <div class="flex items-center justify-between text-slate-400 text-xs mb-2">
-                        <span>Treinos no Mês</span>
-                        <i class="fa-solid fa-dumbbell text-brand-accent"></i>
+                <div class="bg-dark-card border border-dark-border rounded-xl p-4 flex flex-col justify-between shadow-sm">
+                    <div class="flex items-center justify-between text-gray-400 text-xs font-medium">
+                        <span>Objetivo Calorias</span>
+                        <i class="fa-solid fa-fire text-orange-500"></i>
                     </div>
-                    <div class="text-2xl font-bold text-white"><span id="dash-workouts-count">0</span> <span class="text-xs text-slate-400 font-normal">sessões</span></div>
-                    <span class="text-xs text-slate-400 mt-1 block">Meta: 16/mês</span>
+                    <div class="mt-2">
+                        <span id="stat-calories" class="text-2xl font-bold text-white">0</span>
+                        <span class="text-xs text-gray-400">/ <span id="stat-calorie-goal">0</span> kcal</span>
+                    </div>
+                    <div class="w-full bg-gray-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                        <div id="calorie-progress-bar" class="bg-orange-500 h-full w-0 transition-all duration-300"></div>
+                    </div>
                 </div>
 
-                <div class="bg-dark-card p-4 rounded-2xl border border-dark-border">
-                    <div class="flex items-center justify-between text-slate-400 text-xs mb-2">
-                        <span>Calorias Hoje</span>
-                        <i class="fa-solid fa-fire text-amber-500"></i>
+                <div class="bg-dark-card border border-dark-border rounded-xl p-4 flex flex-col justify-between shadow-sm">
+                    <div class="flex items-center justify-between text-gray-400 text-xs font-medium">
+                        <span>Hidratação</span>
+                        <i class="fa-solid fa-glass-water text-cyan-400"></i>
                     </div>
-                    <div class="text-2xl font-bold text-white"><span id="dash-cals">0</span> <span class="text-xs text-slate-400 font-normal">kcal</span></div>
-                    <span class="text-xs text-slate-400 mt-1 block">Meta: 2,400 kcal</span>
+                    <div class="mt-2">
+                        <span id="stat-water" class="text-2xl font-bold text-white">0</span>
+                        <span class="text-xs text-gray-400">/ <span id="stat-water-goal">0</span> ml</span>
+                    </div>
+                    <div class="w-full bg-gray-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                        <div id="water-progress-bar" class="bg-cyan-400 h-full w-0 transition-all duration-300"></div>
+                    </div>
                 </div>
 
-                <div class="bg-dark-card p-4 rounded-2xl border border-dark-border">
-                    <div class="flex items-center justify-between text-slate-400 text-xs mb-2">
-                        <span>Água Consumida</span>
-                        <i class="fa-solid fa-droplet text-blue-400"></i>
+                <div class="bg-dark-card border border-dark-border rounded-xl p-4 flex flex-col justify-between shadow-sm">
+                    <div class="flex items-center justify-between text-gray-400 text-xs font-medium">
+                        <span>Treinos Concluídos</span>
+                        <i class="fa-solid fa-trophy text-yellow-500"></i>
                     </div>
-                    <div class="text-2xl font-bold text-white"><span id="dash-water">0.0</span> <span class="text-xs text-slate-400 font-normal">L</span></div>
-                    <span class="text-xs text-blue-400 mt-1 block">Meta: 3.0 L</span>
+                    <div class="mt-2">
+                        <span id="stat-workouts-count" class="text-2xl font-bold text-white">0</span>
+                        <span class="text-xs text-gray-400">sessões</span>
+                    </div>
+                    <span class="text-[10px] text-brand-500 mt-1">PM Studio Progress</span>
                 </div>
             </div>
 
-            <!-- Próximo Treino & Aulas Agendadas -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Treino Recomendado -->
-                <div class="lg:col-span-2 bg-dark-card p-6 rounded-2xl border border-dark-border">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg text-white flex items-center gap-2">
-                            <i class="fa-solid fa-list-check text-brand-500"></i> Próxima Ficha Recomendada
-                        </h3>
-                        <span class="text-xs bg-brand-500/10 text-brand-400 px-3 py-1 rounded-full border border-brand-500/20 font-medium">Treino A</span>
+            <!-- Weight Progress Chart & Log -->
+            <div class="bg-dark-card border border-dark-border rounded-xl p-5 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-brand-500"></i> Evolução de Peso Corporal
+                        </h2>
+                        <p class="text-xs text-gray-400">Acompanha a tua tendência de peso ao longo do tempo</p>
                     </div>
-
-                    <div class="space-y-3 mb-6">
-                        <div class="flex items-center justify-between p-3 bg-slate-800/60 rounded-xl border border-slate-700/50">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center text-xs font-bold text-brand-400">1</div>
-                                <div>
-                                    <p class="text-sm font-semibold text-white">Supino Reto com Barra</p>
-                                    <p class="text-xs text-slate-400">3 Séries x 8-10 reps</p>
-                                </div>
-                            </div>
-                            <span class="text-xs text-slate-400"><i class="fa-solid fa-clock"></i> 2 min descanso</span>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-slate-800/60 rounded-xl border border-slate-700/50">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center text-xs font-bold text-brand-400">2</div>
-                                <div>
-                                    <p class="text-sm font-semibold text-white">Supino Inclinado c/ Halteres</p>
-                                    <p class="text-xs text-slate-400">2 Séries x 10-12 reps</p>
-                                </div>
-                            </div>
-                            <span class="text-xs text-slate-400"><i class="fa-solid fa-clock"></i> 90s descanso</span>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-slate-800/60 rounded-xl border border-slate-700/50">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center text-xs font-bold text-brand-400">3</div>
-                                <div>
-                                    <p class="text-sm font-semibold text-white">Tríceps na Polia Alta</p>
-                                    <p class="text-xs text-slate-400">2 Séries x 12 reps</p>
-                                </div>
-                            </div>
-                            <span class="text-xs text-slate-400"><i class="fa-solid fa-clock"></i> 60s descanso</span>
-                        </div>
-                    </div>
-
-                    <button onclick="switchTab('workouts')" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-brand-400 font-semibold rounded-xl text-sm transition border border-brand-500/20">
-                        Ver Treino Completo e Registar
+                    <button id="btn-open-weight-modal" class="px-3 py-1.5 bg-brand-500/10 hover:bg-brand-500/20 text-brand-500 border border-brand-500/30 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors self-start sm:self-auto">
+                        <i class="fa-solid fa-plus"></i> Registar Peso
                     </button>
                 </div>
 
-                <!-- Aulas Inscritas -->
-                <div class="bg-dark-card p-6 rounded-2xl border border-dark-border flex flex-col justify-between">
-                    <div>
-                        <h3 class="font-bold text-lg text-white mb-4 flex items-center gap-2">
-                            <i class="fa-solid fa-calendar-day text-brand-accent"></i> Aulas Agendadas
-                        </h3>
-                        <div id="dash-booked-classes-list" class="space-y-3">
-                            <!-- Inserido dinamicamente via JS -->
-                        </div>
-                    </div>
-                    <button onclick="switchTab('classes')" class="mt-4 w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium rounded-xl text-sm transition text-center">
-                        Reservar Mais Aulas
-                    </button>
+                <div class="h-64 relative w-full">
+                    <canvas id="weightChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Activity Timeline -->
+            <div class="bg-dark-card border border-dark-border rounded-xl p-5 shadow-sm">
+                <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-gray-400"></i> Atividade Recente
+                </h3>
+                <div id="recent-activity-list" class="space-y-3">
+                    <p class="text-xs text-gray-500 italic">Nenhum registo efetuado ainda. Começa a registar os teus treinos ou refeições!</p>
                 </div>
             </div>
         </section>
 
-        <!-- 2. DIÁRIO DE TREINO (LOGBOOK) -->
-        <section id="tab-workouts" class="tab-content space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h2 class="text-2xl font-bold text-white">Diário de Treinos</h2>
-                    <p class="text-slate-400 text-sm">Escolha a sua ficha, registe as cargas e acompanhe o tempo de descanso.</p>
-                </div>
-
-                <!-- Seletor de Fichas -->
-                <div class="flex bg-slate-800 p-1 rounded-xl border border-dark-border w-full md:w-auto">
-                    <button onclick="selectRoutine('A')" id="btn-routine-A" class="routine-tab-btn flex-1 md:flex-initial px-4 py-2 rounded-lg text-sm font-semibold transition bg-brand-500 text-black">Treino A</button>
-                    <button onclick="selectRoutine('B')" id="btn-routine-B" class="routine-tab-btn flex-1 md:flex-initial px-4 py-2 rounded-lg text-sm font-semibold transition text-slate-400 hover:text-white">Treino B</button>
-                    <button onclick="selectRoutine('C')" id="btn-routine-C" class="routine-tab-btn flex-1 md:flex-initial px-4 py-2 rounded-lg text-sm font-semibold transition text-slate-400 hover:text-white">Treino C</button>
-                </div>
-            </div>
-
-            <!-- TEMPORIZADOR DE DESCANSO -->
-            <div class="bg-gradient-to-r from-slate-900 via-dark-card to-slate-900 border border-brand-500/30 p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4 shadow-lg">
-                <div class="flex items-center space-x-3">
-                    <div class="w-12 h-12 rounded-xl bg-brand-500/10 border border-brand-500/30 flex items-center justify-center text-brand-400 text-xl font-bold">
-                        <i class="fa-solid fa-stopwatch"></i>
+        <!-- TAB 2: TREINOS & 1RM -->
+        <section id="tab-workouts" class="tab-content hidden space-y-6">
+            <!-- Rest Timer Widget -->
+            <div class="bg-dark-card border border-brand-500/30 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md bg-gradient-to-r from-dark-card to-gray-900">
+                <div class="flex items-center gap-3">
+                    <div class="p-3 bg-brand-500/10 text-brand-500 rounded-xl">
+                        <i class="fa-solid fa-stopwatch text-2xl"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Temporizador de Descanso</p>
-                        <p id="timer-display" class="text-2xl font-black text-white font-mono">01:30</p>
+                        <h3 class="font-bold text-white text-sm">Temporizador de Descanso</h3>
+                        <p id="timer-display" class="text-2xl font-mono font-extrabold text-brand-500">00:00</p>
                     </div>
                 </div>
-
-                <div class="flex items-center gap-2">
-                    <button onclick="setTimerPreset(60)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-300">60s</button>
-                    <button onclick="setTimerPreset(90)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-300">90s</button>
-                    <button onclick="setTimerPreset(120)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-300">120s</button>
-                    <button id="timer-start-btn" onclick="toggleTimer()" class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-black font-bold rounded-lg text-xs transition neon-glow">
-                        Iniciar
-                    </button>
-                    <button onclick="resetTimer()" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-lg text-xs">
-                        <i class="fa-solid fa-rotate-right"></i>
-                    </button>
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <button id="timer-60" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-xs font-medium rounded-lg border border-gray-700">60s</button>
+                    <button id="timer-90" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-xs font-medium rounded-lg border border-gray-700">90s</button>
+                    <button id="timer-120" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-xs font-medium rounded-lg border border-gray-700">120s</button>
+                    <button id="timer-reset" class="px-3 py-1.5 bg-red-500/20 text-red-400 hover:bg-red-500/30 text-xs font-medium rounded-lg border border-red-500/30">Reset</button>
                 </div>
             </div>
 
-            <!-- Lista de Exercícios da Ficha Ativa -->
-            <div id="workout-routine-container" class="space-y-6">
-                <!-- Gerado via JS -->
-            </div>
-
-            <!-- Botão de Finalizar Treino -->
-            <div class="pt-4">
-                <button onclick="finishWorkout()" class="w-full py-4 bg-gradient-to-r from-brand-500 to-brand-accent text-black font-extrabold rounded-2xl text-base shadow-lg hover:opacity-95 transition neon-glow">
-                    <i class="fa-solid fa-check-circle mr-2"></i> Concluir Treino de Hoje (+50 XP)
-                </button>
-            </div>
-        </section>
-
-        <!-- 3. EVOLUÇÃO E MÉTRICAS -->
-        <section id="tab-metrics" class="tab-content space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h2 class="text-2xl font-bold text-white">Evolução & Gráficos DE Progressão</h2>
-                    <p class="text-slate-400 text-sm">Acompanhe o seu progresso físico e ganho de força gravados em IndexedDB.</p>
-                </div>
-                <button onclick="openModal('add-metric-modal')" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-black font-bold rounded-xl text-sm transition flex items-center gap-2 neon-glow">
-                    <i class="fa-solid fa-plus"></i> Novo Registo
-                </button>
-            </div>
-
-            <!-- Gráficos -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Gráfico de Peso -->
-                <div class="bg-dark-card p-5 rounded-2xl border border-dark-border">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-weight-scale text-brand-500"></i> Evolução de Peso (kg)
+                <!-- Log Workout Section -->
+                <div class="bg-dark-card border border-dark-border rounded-xl p-5 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-square-plus text-brand-500"></i> Registo de Treino
                         </h3>
-                        <span class="text-xs text-slate-400">Histórico IndexedDB</span>
+                        <button id="btn-open-exercise-lib" class="text-xs text-brand-500 hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-book-open"></i> Biblioteca
+                        </button>
                     </div>
-                    <div class="h-64">
-                        <canvas id="weightChart"></canvas>
+
+                    <form id="form-workout-log" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-400 mb-1">Exercício</label>
+                            <input type="text" id="workout-exercise-name" placeholder="Ex: Supino Reto, Agachamento..." class="w-full bg-gray-900 border border-dark-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500" required>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Séries</label>
+                                <input type="number" id="workout-sets" min="1" placeholder="3" class="w-full bg-gray-900 border border-dark-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Reps</label>
+                                <input type="number" id="workout-reps" min="1" placeholder="10" class="w-full bg-gray-900 border border-dark-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-400 mb-1">Carga (kg)</label>
+                                <input type="number" step="0.5" id="workout-weight" min="0" placeholder="60" class="w-full bg-gray-900 border border-dark-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brand-500" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg text-sm transition-all shadow-md flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-save"></i> Guardar Série de Treino
+                        </button>
+                    </form>
+                </div>
+
+                <!-- 1RM Maximum Strength Tracker -->
+                <div class="bg-dark-card border border-dark-border rounded-xl p-5 shadow-sm space-y-4">
+                    <h3 class="font-bold text-white text-base flex items-center gap-2">
+                        <i class="fa-solid fa-award text-yellow-500"></i> Recordes de Força (1RM)
+                    </h3>
+                    
+                    <form id="form-1rm-log" class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <input type="text" id="rm-exercise" placeholder="Exercício" class="bg-gray-900 border border-dark-border rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500" required>
+                        <input type="number" step="0.5" id="rm-weight" placeholder="Carga Max (kg)" class="bg-gray-900 border border-dark-border rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500" required>
+                        <button type="submit" class="bg-gray-800 hover:bg-gray-700 border border-gray-700 text-brand-500 font-medium text-xs rounded-lg py-2 transition-colors">
+                            Atualizar PR
+                        </button>
+                    </form>
+
+                    <div id="rm-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                        <p class="text-xs text-gray-500 italic">Nenhum recorde de força registado.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workout History List -->
+            <div class="bg-dark-card border border-dark-border rounded-xl p-5 shadow-sm space-y-3">
+                <h3 class="font-bold text-white text-base flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-brand-500"></i> Histórico de Execução
+                </h3>
+                <div id="workout-history-container" class="space-y-2">
+                    <p class="text-xs text-gray-500 italic">O teu histórico está limpo. Adiciona a tua primeira série acima!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: AULAS DE GRUPO -->
+        <section id="tab-classes" class="tab-content hidden space-y-6">
+            <div class="bg-dark-card border border-dark-border rounded-xl p-5 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-days text-brand-500"></i> Marcações de Aulas de Grupo PM Studio
+                        </h2>
+                        <p class="text-xs text-gray-400">Reserva a tua vaga nas aulas presenciais</p>
                     </div>
                 </div>
 
-                <!-- Gráfico de Cargas -->
-                <div class="bg-dark-card p-5 rounded-2xl border border-dark-border">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
-                        <h3 class="font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-dumbbell text-brand-accent"></i> Evolução de Carga (1RM)
-                        </h3>
-                        <select id="exercise-chart-select" onchange="renderCharts()" class="bg-slate-800 text-xs text-white border border-dark-border rounded-lg px-2 py-1.5 outline-none focus:border-brand-500">
-                            <option value="Supino Reto com Barra">Supino Reto</option>
-                            <option value="Agachamento Livre">Agachamento</option>
-                            <option value="Levantamento Terra">Levantamento Terra</option>
+                <!-- Booking Form -->
+                <form id="form-class-booking" class="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-gray-900 p-4 rounded-xl border border-dark-border">
+                    <div class="sm:col-span-1">
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Modalidade</label>
+                        <select id="class-type" class="w-full bg-dark-card border border-dark-border rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                            <option value="Cross Training">Cross Training</option>
+                            <option value="Pilates & Core">Pilates & Core</option>
+                            <option value="HYROX Prep">HYROX Prep</option>
+                            <option value="Mobility & Stretch">Mobility & Stretch</option>
+                            <option value="Cycling Power">Cycling Power</option>
                         </select>
                     </div>
-                    <div class="h-64">
-                        <canvas id="strengthChart"></canvas>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Data</label>
+                        <input type="date" id="class-date" class="w-full bg-dark-card border border-dark-border rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Horário</label>
+                        <input type="time" id="class-time" value="18:30" class="w-full bg-dark-card border border-dark-border rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500" required>
+                    </div>
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full py-2 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg text-xs transition-all shadow-md">
+                            Reservar Vaga
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Bookings List -->
+                <div class="mt-4">
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">As tuas Aulas Agendadas</h4>
+                    <div id="classes-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <p class="text-xs text-gray-500 italic col-span-2">Nenhuma aula agendada de momento.</p>
                     </div>
                 </div>
             </div>
-
-            <!-- Tabela de Histórico de Medidas -->
-            <div class="bg-dark-card rounded-2xl border border-dark-border p-5">
-                <h3 class="font-bold text-white mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-clock-rotate-left text-slate-400"></i> Histórico de Medidas Corporais
-                </h3>
-                <div class="overflow-x-auto custom-scrollbar">
-                    <table class="w-full text-left text-sm text-slate-300">
-                        <thead class="text-xs text-slate-400 uppercase bg-slate-800/60 border-b border-dark-border">
-                            <tr>
-                                <th class="p-3">Data</th>
-                                <th class="p-3">Peso (kg)</th>
-                                <th class="p-3">% Gordura</th>
-                                <th class="p-3">Braço (cm)</th>
-                                <th class="p-3">Cintura (cm)</th>
-                                <th class="p-3">Peito (cm)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="metrics-table-body" class="divide-y divide-dark-border">
-                            <!-- Inserido dinamicamente via JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </section>
 
-        <!-- 4. AULAS DE GRUPO -->
-        <section id="tab-classes" class="tab-content space-y-6">
-            <div>
-                <h2 class="text-2xl font-bold text-white">Aulas de Grupo</h2>
-                <p class="text-slate-400 text-sm">Garanta o seu lugar nas aulas de Spinning, Yoga, Pilates e Crossfit.</p>
-            </div>
-
-            <!-- Filtros -->
-            <div class="flex flex-wrap gap-2 pb-2">
-                <button onclick="filterClasses('all')" class="class-filter-btn px-4 py-2 bg-brand-500 text-black font-bold rounded-xl text-xs">Todas</button>
-                <button onclick="filterClasses('Spinning')" class="class-filter-btn px-4 py-2 bg-slate-800 text-slate-300 font-medium rounded-xl text-xs hover:bg-slate-700">Spinning</button>
-                <button onclick="filterClasses('Yoga')" class="class-filter-btn px-4 py-2 bg-slate-800 text-slate-300 font-medium rounded-xl text-xs hover:bg-slate-700">Yoga</button>
-                <button onclick="filterClasses('Pilates')" class="class-filter-btn px-4 py-2 bg-slate-800 text-slate-300 font-medium rounded-xl text-xs hover:bg-slate-700">Pilates</button>
-                <button onclick="filterClasses('CrossFit')" class="class-filter-btn px-4 py-2 bg-slate-800 text-slate-300 font-medium rounded-xl text-xs hover:bg-slate-700">CrossFit</button>
-            </div>
-
-            <!-- Lista de Aulas -->
-            <div id="classes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Gerado por JS -->
-            </div>
-        </section>
-
-        <!-- 5. NUTRIÇÃO E HÁBITOS -->
-        <section id="tab-nutrition" class="tab-content space-y-6">
-            <div>
-                <h2 class="text-2xl font-bold text-white">Nutrição & Hidratação</h2>
-                <p class="text-slate-400 text-sm">Controle as suas calorias diárias, macros e ingestão de água.</p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Cartão Calorias e Macros -->
-                <div class="lg:col-span-2 bg-dark-card p-6 rounded-2xl border border-dark-border space-y-6">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-bold text-white text-lg flex items-center gap-2">
-                            <i class="fa-solid fa-utensils text-brand-500"></i> Resumo Macronutricional
+        <!-- TAB 4: NUTRIÇÃO & ÁGUA -->
+        <section id="tab-nutrition" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Water Tracking Card -->
+                <div class="bg-dark-card border border-dark-border rounded-xl p-5 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-droplet text-cyan-400"></i> Registo de Hidratação
                         </h3>
-                        <span class="text-xs text-slate-400">Meta: 2,400 kcal</span>
+                        <span id="nutrition-water-meta" class="text-xs text-cyan-400 font-semibold">0 ml</span>
                     </div>
 
-                    <!-- Progresso Calórico Geral -->
-                    <div>
-                        <div class="flex justify-between text-sm mb-1">
-                            <span class="text-slate-300 font-medium">Calorias Ingeridas</span>
-                            <span class="text-white font-bold"><span id="cals-ingested">0</span> / 2400 kcal</span>
-                        </div>
-                        <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
-                            <div id="cals-bar" class="h-full bg-gradient-to-r from-brand-500 to-brand-accent rounded-full transition-all duration-300" style="width: 0%;"></div>
-                        </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="addWater(250)" class="py-3 bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/40 text-cyan-300 rounded-xl flex flex-col items-center justify-center gap-1 transition-all">
+                            <i class="fa-solid fa-glass-water text-lg"></i>
+                            <span class="text-xs font-bold">+250 ml</span>
+                        </button>
+                        <button onclick="addWater(500)" class="py-3 bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/40 text-cyan-300 rounded-xl flex flex-col items-center justify-center gap-1 transition-all">
+                            <i class="fa-solid fa-bottle-water text-lg"></i>
+                            <span class="text-xs font-bold">+500 ml</span>
+                        </button>
+                        <button onclick="addWater(750)" class="py-3 bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/40 text-cyan-300 rounded-xl flex flex-col items-center justify-center gap-1 transition-all">
+                            <i class="fa-solid fa-jug-detergent text-lg"></i>
+                            <span class="text-xs font-bold">+750 ml</span>
+                        </button>
                     </div>
 
-                    <!-- Barras dos Macros -->
-                    <div class="grid grid-cols-3 gap-4 pt-2">
-                        <!-- Proteínas -->
-                        <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/50">
-                            <div class="flex justify-between text-xs text-slate-400 mb-1">
-                                <span>Proteína</span>
-                                <span class="text-brand-400 font-bold"><span id="prot-ingested">0</span> / 180g</span>
-                            </div>
-                            <div class="w-full h-2 bg-slate-700 rounded-full overflow-hidden mb-2">
-                                <div id="prot-bar" class="h-full bg-brand-500 transition-all duration-300" style="width: 0%;"></div>
-                            </div>
-                        </div>
-
-                        <!-- Hidratos -->
-                        <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/50">
-                            <div class="flex justify-between text-xs text-slate-400 mb-1">
-                                <span>Hidratos</span>
-                                <span class="text-amber-400 font-bold"><span id="carbs-ingested">0</span> / 270g</span>
-                            </div>
-                            <div class="w-full h-2 bg-slate-700 rounded-full overflow-hidden mb-2">
-                                <div id="carbs-bar" class="h-full bg-amber-500 transition-all duration-300" style="width: 0%;"></div>
-                            </div>
-                        </div>
-
-                        <!-- Gorduras -->
-                        <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-700/50">
-                            <div class="flex justify-between text-xs text-slate-400 mb-1">
-                                <span>Gordura</span>
-                                <span class="text-rose-400 font-bold"><span id="fat-ingested">0</span> / 65g</span>
-                            </div>
-                            <div class="w-full h-2 bg-slate-700 rounded-full overflow-hidden mb-2">
-                                <div id="fat-bar" class="h-full bg-rose-500 transition-all duration-300" style="width: 0%;"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Formulário Rápido de Inserção -->
-                    <div class="pt-4 border-t border-dark-border">
-                        <h4 class="text-sm font-semibold text-white mb-3">Adicionar Refeição Rápida</h4>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                            <input type="number" id="input-cals" placeholder="Calorias (kcal)" class="bg-slate-800 text-xs text-white p-2.5 rounded-xl border border-dark-border outline-none focus:border-brand-500">
-                            <input type="number" id="input-prot" placeholder="Proteína (g)" class="bg-slate-800 text-xs text-white p-2.5 rounded-xl border border-dark-border outline-none focus:border-brand-500">
-                            <input type="number" id="input-carbs" placeholder="Hidratos (g)" class="bg-slate-800 text-xs text-white p-2.5 rounded-xl border border-dark-border outline-none focus:border-brand-500">
-                            <button onclick="addMeal()" class="bg-brand-500 hover:bg-brand-600 text-black font-bold text-xs py-2.5 rounded-xl transition">Adicionar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Rastreio de Água -->
-                <div class="bg-dark-card p-6 rounded-2xl border border-dark-border flex flex-col justify-between space-y-6">
-                    <div>
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-white text-lg flex items-center gap-2">
-                                <i class="fa-solid fa-droplet text-blue-400"></i> Hidratação
-                            </h3>
-                            <span class="text-xs text-blue-400 font-semibold">Meta: 3.0 Litros</span>
-                        </div>
-
-                        <!-- Mostrador de Água -->
-                        <div class="text-center py-6 bg-slate-800/40 rounded-2xl border border-slate-700/50 mb-6">
-                            <p class="text-4xl font-black text-blue-400 mb-1 font-mono"><span id="water-intake-val">0.0</span> <span class="text-lg">L</span></p>
-                            <p class="text-xs text-slate-400">Consumidos hoje (<span id="water-cups-count">0</span> copos)</p>
-                        </div>
-
-                        <!-- Ações Rápidas -->
-                        <div class="grid grid-cols-2 gap-3">
-                            <button onclick="addWater(0.25)" class="p-3 bg-slate-800 hover:bg-slate-700 text-blue-400 border border-blue-500/20 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition">
-                                <i class="fa-solid fa-glass-water"></i> + 250ml
-                            </button>
-                            <button onclick="addWater(0.5)" class="p-3 bg-slate-800 hover:bg-slate-700 text-blue-400 border border-blue-500/20 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition">
-                                <i class="fa-solid fa-bottle-water"></i> + 500ml
-                            </button>
-                        </div>
-                    </div>
-
-                    <button onclick="resetWater()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 text-xs rounded-xl transition">
-                        Reiniciar Contador de Água
+                    <button onclick="resetWaterToday()" class="w-full py-1.5 bg-gray-800/60 hover:bg-gray-800 text-gray-400 text-xs rounded-lg transition-colors">
+                        Reiniciar Contador de Hoje
                     </button>
                 </div>
-            </div>
-        </section>
 
-        <!-- 6. GAMIFICAÇÃO & DESAFIOS -->
-        <section id="tab-achievements" class="tab-content space-y-6">
-            <div>
-                <h2 class="text-2xl font-bold text-white">Desafios & Conquistas</h2>
-                <p class="text-slate-400 text-sm">Mantenha a consistência, ganhe pontos e desbloqueie medalhas exclusivas.</p>
-            </div>
+                <!-- Meal Tracker Card -->
+                <div class="bg-dark-card border border-dark-border rounded-xl p-5 shadow-sm space-y-4">
+                    <h3 class="font-bold text-white text-base flex items-center gap-2">
+                        <i class="fa-solid fa-utensils text-orange-400"></i> Registar Refeição
+                    </h3>
 
-            <!-- Resumo do Nível -->
-            <div class="bg-gradient-to-r from-slate-900 via-dark-card to-slate-900 p-6 rounded-2xl border border-brand-500/30 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
-                <div class="flex items-center space-x-4">
-                    <div class="w-16 h-16 rounded-2xl bg-brand-500 flex items-center justify-center text-black font-black text-2xl neon-glow">
-                        <i class="fa-solid fa-award"></i>
-                    </div>
-                    <div>
-                        <span class="text-xs text-brand-400 font-bold uppercase tracking-wider">Nível Atleta Pro</span>
-                        <h3 class="text-2xl font-extrabold text-white">Nível <span id="user-level">4</span></h3>
-                        <p class="text-xs text-slate-400">Total de Pontos XP: <span id="user-xp" class="text-white font-bold">1,450</span> XP</p>
-                    </div>
-                </div>
-
-                <div class="w-full sm:w-64">
-                    <div class="flex justify-between text-xs text-slate-400 mb-1">
-                        <span>Progresso para Nível 5</span>
-                        <span class="text-brand-400"><span id="user-xp-bar-text">1450</span>/2000 XP</span>
-                    </div>
-                    <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
-                        <div id="user-xp-bar" class="h-full bg-brand-500 rounded-full transition-all duration-300" style="width: 72.5%;"></div>
-                    </div>
+                    <form id="form-meal-log" class="space-y-3">
+                        <div>
+                            <input type="text" id="meal-name" placeholder="Descrição (Ex: Frango com Arroz)" class="w-full bg-gray-900 border border-dark-border rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500" required>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="number" id="meal-calories" min="0" placeholder="Calorias (kcal)" class="bg-gray-900 border border-dark-border rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500" required>
+                            <input type="number" id="meal-protein" min="0" placeholder="Proteína (g)" class="bg-gray-900 border border-dark-border rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                        </div>
+                        <button type="submit" class="w-full py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg text-xs transition-all shadow-md">
+                            Registar Refeição
+                        </button>
+                    </form>
                 </div>
             </div>
 
-            <!-- Grelha de Conquistas -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="badges-container">
-                <!-- Gerado via JS -->
+            <!-- Meals Log List -->
+            <div class="bg-dark-card border border-dark-border rounded-xl p-5 shadow-sm space-y-3">
+                <h3 class="font-bold text-white text-base flex items-center gap-2">
+                    <i class="fa-solid fa-list text-gray-400"></i> Refeições Registadas Hoje
+                </h3>
+                <div id="meals-list-container" class="space-y-2">
+                    <p class="text-xs text-gray-500 italic">Nenhuma refeição registada hoje.</p>
+                </div>
             </div>
         </section>
 
     </main>
 
-    <!-- NAVEGAÇÃO INFERIOR MOBILE -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-dark-card border-t border-dark-border px-2 py-2 flex justify-around items-center z-40">
-        <button onclick="switchTab('dashboard')" class="mobile-nav-btn p-2 text-center text-slate-400 hover:text-brand-400 active-nav text-brand-400 font-bold" data-tab="dashboard">
-            <i class="fa-solid fa-chart-pie text-lg block"></i>
-            <span class="text-[10px] mt-0.5 block">Inicio</span>
-        </button>
-        <button onclick="switchTab('workouts')" class="mobile-nav-btn p-2 text-center text-slate-400 hover:text-brand-400" data-tab="workouts">
-            <i class="fa-solid fa-dumbbell text-lg block"></i>
-            <span class="text-[10px] mt-0.5 block">Treino</span>
-        </button>
-        <button onclick="switchTab('metrics')" class="mobile-nav-btn p-2 text-center text-slate-400 hover:text-brand-400" data-tab="metrics">
-            <i class="fa-solid fa-chart-line text-lg block"></i>
-            <span class="text-[10px] mt-0.5 block">Evolução</span>
-        </button>
-        <button onclick="switchTab('classes')" class="mobile-nav-btn p-2 text-center text-slate-400 hover:text-brand-400" data-tab="classes">
-            <i class="fa-solid fa-calendar-check text-lg block"></i>
-            <span class="text-[10px] mt-0.5 block">Aulas</span>
-        </button>
-        <button onclick="switchTab('nutrition')" class="mobile-nav-btn p-2 text-center text-slate-400 hover:text-brand-400" data-tab="nutrition">
-            <i class="fa-solid fa-apple-whole text-lg block"></i>
-            <span class="text-[10px] mt-0.5 block">Nutrição</span>
-        </button>
-        <button onclick="switchTab('achievements')" class="mobile-nav-btn p-2 text-center text-slate-400 hover:text-brand-400" data-tab="achievements">
-            <i class="fa-solid fa-trophy text-lg block"></i>
-            <span class="text-[10px] mt-0.5 block">Desafios</span>
-        </button>
-    </nav>
+    <!-- ONBOARDING & PROFILE MODAL (Appears on first visit or edited) -->
+    <div id="modal-onboarding" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-dark-card border border-brand-500/30 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5 animate-fade-in">
+            <div class="text-center space-y-2">
+                <img src="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c" alt="PM Studio Logo" class="h-16 w-16 mx-auto object-contain rounded-xl bg-gray-900 p-1 border border-brand-500/40 shadow-lg">
+                <h2 class="text-xl font-extrabold text-white">Bem-vindo ao PM Studio</h2>
+                <p class="text-xs text-gray-400">Configura o teu perfil inicial para começar a tua jornada de alta performance.</p>
+            </div>
 
-    <!-- MODAL REGISTAR NOVA MEDIDA -->
-    <div id="add-metric-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-dark-card border border-dark-border p-6 rounded-2xl w-full max-w-md space-y-4 relative">
-            <button onclick="closeModal('add-metric-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-            <h3 class="text-xl font-bold text-white">Registar Novas Medidas</h3>
-            
-            <form id="form-add-metric" onsubmit="handleMetricSubmit(event)" class="space-y-3">
+            <form id="form-onboarding" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">Data</label>
-                    <input type="date" id="input-metric-date" required class="w-full bg-slate-800 border border-dark-border text-white text-sm p-3 rounded-xl outline-none focus:border-brand-500">
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Nome Completo</label>
+                    <input type="text" id="onboarding-name" placeholder="Ex: João Silva" class="w-full bg-gray-900 border border-dark-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500" required>
                 </div>
+
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">Peso (kg)</label>
-                        <input type="number" step="0.1" id="input-metric-weight" placeholder="Ex: 78.5" required class="w-full bg-slate-800 border border-dark-border text-white text-sm p-3 rounded-xl outline-none focus:border-brand-500">
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Peso Inicial (kg)</label>
+                        <input type="number" step="0.1" id="onboarding-weight" placeholder="75.0" class="w-full bg-gray-900 border border-dark-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">% Gordura</label>
-                        <input type="number" step="0.1" id="input-metric-fat" placeholder="Ex: 14.5" class="w-full bg-slate-800 border border-dark-border text-white text-sm p-3 rounded-xl outline-none focus:border-brand-500">
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Altura (cm)</label>
+                        <input type="number" id="onboarding-height" placeholder="178" class="w-full bg-gray-900 border border-dark-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500" required>
                     </div>
                 </div>
-                <div class="grid grid-cols-3 gap-2">
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Objetivo Principal</label>
+                    <select id="onboarding-goal" class="w-full bg-gray-900 border border-dark-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                        <option value="Ganhar Massa Muscular">Ganhar Massa Muscular</option>
+                        <option value="Perder Peso / Perda de Gordura">Perder Peso / Perda de Gordura</option>
+                        <option value="Manutenção & Performance">Manutenção & Performance</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">Braço (cm)</label>
-                        <input type="number" step="0.5" id="input-metric-arm" placeholder="Ex: 38" class="w-full bg-slate-800 border border-dark-border text-white text-sm p-2.5 rounded-xl outline-none focus:border-brand-500">
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Meta Água (ml)</label>
+                        <input type="number" id="onboarding-water-goal" value="2500" step="100" class="w-full bg-gray-900 border border-dark-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">Cintura (cm)</label>
-                        <input type="number" step="0.5" id="input-metric-waist" placeholder="Ex: 81" class="w-full bg-slate-800 border border-dark-border text-white text-sm p-2.5 rounded-xl outline-none focus:border-brand-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">Peito (cm)</label>
-                        <input type="number" step="0.5" id="input-metric-chest" placeholder="Ex: 102" class="w-full bg-slate-800 border border-dark-border text-white text-sm p-2.5 rounded-xl outline-none focus:border-brand-500">
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Meta Calorias (kcal)</label>
+                        <input type="number" id="onboarding-calorie-goal" value="2400" step="50" class="w-full bg-gray-900 border border-dark-border rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500" required>
                     </div>
                 </div>
-                <button type="submit" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-black font-bold rounded-xl text-sm transition mt-4 neon-glow">
-                    Guardar Medidas no IndexedDB
+
+                <button type="submit" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl text-sm transition-all shadow-lg flex items-center justify-center gap-2 mt-2">
+                    <i class="fa-solid fa-rocket"></i> Guardar Perfil & Iniciar
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL VÍDEO EXPLICATIVO DE EXERCÍCIO -->
-    <div id="exercise-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-dark-card border border-dark-border p-6 rounded-2xl w-full max-w-lg space-y-4 relative">
-            <button onclick="closeModal('exercise-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-            <h3 id="modal-ex-title" class="text-xl font-bold text-white">Nome do Exercício</h3>
-            
-            <div class="w-full h-48 bg-slate-800 rounded-xl flex flex-col items-center justify-center border border-slate-700 relative overflow-hidden group">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
-                <i class="fa-solid fa-circle-play text-5xl text-brand-400 z-20 group-hover:scale-110 transition cursor-pointer"></i>
-                <p class="z-20 text-xs text-slate-300 mt-2">Demonstração Técnica da Execução</p>
+    <!-- LOG WEIGHT MODAL -->
+    <div id="modal-weight" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-dark-card border border-dark-border rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-white text-base">Registar Peso Corporal</h3>
+                <button onclick="closeModal('modal-weight')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
+            <form id="form-weight-log" class="space-y-3">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Data</label>
+                    <input type="date" id="weight-date" class="w-full bg-gray-900 border border-dark-border rounded-lg px-3 py-2 text-xs text-white" required>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Peso (kg)</label>
+                    <input type="number" step="0.1" id="weight-value" placeholder="75.5" class="w-full bg-gray-900 border border-dark-border rounded-lg px-3 py-2 text-xs text-white" required>
+                </div>
+                <button type="submit" class="w-full py-2 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-lg text-xs transition-all shadow-md">
+                    Guardar Registo
+                </button>
+            </form>
+        </div>
+    </div>
 
-            <div class="space-y-2">
-                <h4 class="text-sm font-semibold text-brand-400">Técnica Correta & Dicas:</h4>
-                <p id="modal-ex-desc" class="text-xs text-slate-300 leading-relaxed">
-                    Instruções detalhadas do exercício...
-                </p>
+    <!-- EXERCISE LIBRARY MODAL -->
+    <div id="modal-exercise-lib" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-dark-card border border-dark-border rounded-2xl max-w-lg w-full p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-white text-base flex items-center gap-2">
+                    <i class="fa-solid fa-book-open text-brand-500"></i> Biblioteca de Exercícios
+                </h3>
+                <button onclick="closeModal('modal-exercise-lib')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="space-y-2 max-h-80 overflow-y-auto pr-1 text-xs">
+                <div class="p-3 bg-gray-900 border border-dark-border rounded-lg flex justify-between items-center cursor-pointer hover:border-brand-500/50" onclick="selectExercise('Supino Reto com Barra')">
+                    <div>
+                        <p class="font-bold text-white">Supino Reto com Barra</p>
+                        <p class="text-gray-400 text-[11px]">Peito / Tríceps</p>
+                    </div>
+                    <span class="text-brand-500 font-medium">Usar</span>
+                </div>
+                <div class="p-3 bg-gray-900 border border-dark-border rounded-lg flex justify-between items-center cursor-pointer hover:border-brand-500/50" onclick="selectExercise('Agachamento Livre')">
+                    <div>
+                        <p class="font-bold text-white">Agachamento Livre</p>
+                        <p class="text-gray-400 text-[11px]">Quadríceps / Glúteos</p>
+                    </div>
+                    <span class="text-brand-500 font-medium">Usar</span>
+                </div>
+                <div class="p-3 bg-gray-900 border border-dark-border rounded-lg flex justify-between items-center cursor-pointer hover:border-brand-500/50" onclick="selectExercise('Levantamento Terra')">
+                    <div>
+                        <p class="font-bold text-white">Levantamento Terra</p>
+                        <p class="text-gray-400 text-[11px]">Cadeia Posterior / Costas</p>
+                    </div>
+                    <span class="text-brand-500 font-medium">Usar</span>
+                </div>
+                <div class="p-3 bg-gray-900 border border-dark-border rounded-lg flex justify-between items-center cursor-pointer hover:border-brand-500/50" onclick="selectExercise('Puxada na Frente')">
+                    <div>
+                        <p class="font-bold text-white">Puxada na Frente</p>
+                        <p class="text-gray-400 text-[11px]">Dorsal / Biceps</p>
+                    </div>
+                    <span class="text-brand-500 font-medium">Usar</span>
+                </div>
+                <div class="p-3 bg-gray-900 border border-dark-border rounded-lg flex justify-between items-center cursor-pointer hover:border-brand-500/50" onclick="selectExercise('Press Militar de Ombros')">
+                    <div>
+                        <p class="font-bold text-white">Press Militar de Ombros</p>
+                        <p class="text-gray-400 text-[11px]">Ombros / Tríceps</p>
+                    </div>
+                    <span class="text-brand-500 font-medium">Usar</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- NOTIFICAÇÃO TOAST CUSTOMIZADA -->
-    <div id="toast-notification" class="fixed bottom-20 md:bottom-8 right-4 bg-brand-500 text-black px-5 py-3 rounded-2xl font-bold shadow-2xl z-50 transform translate-y-32 transition-transform duration-300 flex items-center space-x-3">
-        <i class="fa-solid fa-circle-check text-lg"></i>
-        <span id="toast-message" class="text-sm">Ação efetuada com sucesso!</span>
-    </div>
-
-    <!-- REGISTO DO SERVICE WORKER & SUPORTE PWA -->
+    <!-- JAVASCRIPT APP LOGIC & INDEXEDDB HELPER -->
     <script>
-        let deferredPrompt;
+        /* ----------------------------------------------------
+           INDEXEDDB MANAGER (NO DEMO DATA PRE-LOADED)
+        ---------------------------------------------------- */
+        const DB_NAME = 'PMStudioDB';
+        const DB_VERSION = 1;
+        let db = null;
 
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then((reg) => {
-                        console.log('[PWA] Service Worker registado com sucesso:', reg.scope);
-                    })
-                    .catch((err) => {
-                        console.error('[PWA] Falha ao registar Service Worker:', err);
-                    });
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains('profile')) {
+                        db.createObjectStore('profile', { keyPath: 'id' });
+                    }
+                    if (!db.objectStoreNames.contains('weightHistory')) {
+                        db.createObjectStore('weightHistory', { keyPath: 'id', autoIncrement: true });
+                    }
+                    if (!db.objectStoreNames.contains('workouts')) {
+                        db.createObjectStore('workouts', { keyPath: 'id', autoIncrement: true });
+                    }
+                    if (!db.objectStoreNames.contains('rmRecords')) {
+                        db.createObjectStore('rmRecords', { keyPath: 'exercise' });
+                    }
+                    if (!db.objectStoreNames.contains('classes')) {
+                        db.createObjectStore('classes', { keyPath: 'id', autoIncrement: true });
+                    }
+                    if (!db.objectStoreNames.contains('meals')) {
+                        db.createObjectStore('meals', { keyPath: 'id', autoIncrement: true });
+                    }
+                    if (!db.objectStoreNames.contains('waterLogs')) {
+                        db.createObjectStore('waterLogs', { keyPath: 'date' });
+                    }
+                };
+
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    resolve(db);
+                };
+
+                request.onerror = (event) => {
+                    console.error("IndexedDB error:", event.target.errorCode);
+                    reject(event.target.errorCode);
+                };
             });
         }
 
-        // Evento do Prompt de Instalação PWA
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            const banner = document.getElementById('pwa-install-banner');
-            if (banner) banner.classList.remove('hidden');
-        });
-
-        function installPWA() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('[PWA] Utilizador aceitou a instalação.');
-                    } else {
-                        console.log('[PWA] Utilizador rejeitou a instalação.');
-                    }
-                    deferredPrompt = null;
-                    dismissInstallBanner();
-                });
-            }
+        // DB Generic Operations
+        function dbGet(storeName, key) {
+            return new Promise((resolve) => {
+                if (!db) return resolve(null);
+                const tx = db.transaction(storeName, 'readonly');
+                const store = tx.objectStore(storeName);
+                const req = store.get(key);
+                req.onsuccess = () => resolve(req.result || null);
+                req.onerror = () => resolve(null);
+            });
         }
 
-        function dismissInstallBanner() {
-            const banner = document.getElementById('pwa-install-banner');
-            if (banner) banner.classList.add('hidden');
-        }
-    </script>
-
-    <!-- LÓGICA JAVASCRIPT & WRAPPER NATIVO INDEXEDDB -->
-    <script>
-        /* =============================================================
-           1. WRAPPER PROMISSIFICADO DE INDEXEDDB
-           ============================================================= */
-        const DB_NAME = 'FitPulseDB';
-        const DB_VERSION = 1;
-
-        class FitPulseDB {
-            constructor() {
-                this.db = null;
-            }
-
-            async init() {
-                return new Promise((resolve, reject) => {
-                    const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-                    request.onupgradeneeded = (e) => {
-                        const db = e.target.result;
-
-                        // Store 1: Peso e Medidas
-                        if (!db.objectStoreNames.contains('peso')) {
-                            const pesoStore = db.createObjectStore('peso', { keyPath: 'id', autoIncrement: true });
-                            pesoStore.createIndex('date', 'date', { unique: false });
-                        }
-
-                        // Store 2: Evolução de Força
-                        if (!db.objectStoreNames.contains('forca')) {
-                            const forcaStore = db.createObjectStore('forca', { keyPath: 'id', autoIncrement: true });
-                            forcaStore.createIndex('exercise', 'exercise', { unique: false });
-                            forcaStore.createIndex('date', 'date', { unique: false });
-                        }
-
-                        // Store 3: Fichas e Histórico de Treinos
-                        if (!db.objectStoreNames.contains('treinos')) {
-                            db.createObjectStore('treinos', { keyPath: 'routineCode' });
-                        }
-
-                        // Store 4: Aulas de Grupo
-                        if (!db.objectStoreNames.contains('aulas')) {
-                            db.createObjectStore('aulas', { keyPath: 'id' });
-                        }
-
-                        // Store 5: Nutrição e Hidratação Diária
-                        if (!db.objectStoreNames.contains('nutricao')) {
-                            db.createObjectStore('nutricao', { keyPath: 'date' });
-                        }
-
-                        // Store 6: Perfil do Utilizador
-                        if (!db.objectStoreNames.contains('perfil')) {
-                            db.createObjectStore('perfil', { keyPath: 'id' });
-                        }
-                    };
-
-                    request.onsuccess = (e) => {
-                        this.db = e.target.result;
-                        resolve(this.db);
-                    };
-
-                    request.onerror = (e) => {
-                        reject('Erro ao abrir o IndexedDB: ' + e.target.error);
-                    };
-                });
-            }
-
-            async getAll(storeName) {
-                return new Promise((resolve, reject) => {
-                    const tx = this.db.transaction(storeName, 'readonly');
-                    const store = tx.objectStore(storeName);
-                    const req = store.getAll();
-                    req.onsuccess = () => resolve(req.result);
-                    req.onerror = () => reject(req.error);
-                });
-            }
-
-            async get(storeName, key) {
-                return new Promise((resolve, reject) => {
-                    const tx = this.db.transaction(storeName, 'readonly');
-                    const store = tx.objectStore(storeName);
-                    const req = store.get(key);
-                    req.onsuccess = () => resolve(req.result);
-                    req.onerror = () => reject(req.error);
-                });
-            }
-
-            async put(storeName, item) {
-                return new Promise((resolve, reject) => {
-                    const tx = this.db.transaction(storeName, 'readwrite');
-                    const store = tx.objectStore(storeName);
-                    const req = store.put(item);
-                    req.onsuccess = () => resolve(req.result);
-                    req.onerror = () => reject(req.error);
-                });
-            }
-
-            async add(storeName, item) {
-                return new Promise((resolve, reject) => {
-                    const tx = this.db.transaction(storeName, 'readwrite');
-                    const store = tx.objectStore(storeName);
-                    const req = store.add(item);
-                    req.onsuccess = () => resolve(req.result);
-                    req.onerror = () => reject(req.error);
-                });
-            }
-
-            async clearStore(storeName) {
-                return new Promise((resolve, reject) => {
-                    const tx = this.db.transaction(storeName, 'readwrite');
-                    const store = tx.objectStore(storeName);
-                    const req = store.clear();
-                    req.onsuccess = () => resolve();
-                    req.onerror = () => reject(req.error);
-                });
-            }
+        function dbGetAll(storeName) {
+            return new Promise((resolve) => {
+                if (!db) return resolve([]);
+                const tx = db.transaction(storeName, 'readonly');
+                const store = tx.objectStore(storeName);
+                const req = store.getAll();
+                req.onsuccess = () => resolve(req.result || []);
+                req.onerror = () => resolve([]);
+            });
         }
 
-        const db = new FitPulseDB();
-
-        /* =============================================================
-           2. POPULAÇÃO INICIAL DE DEMONSTRAÇÃO (SEED DATA)
-           ============================================================= */
-        async function seedDatabaseIfEmpty() {
-            const perfil = await db.get('perfil', 'user_profile');
-            if (!perfil) {
-                // Perfil do Utilizador
-                await db.put('perfil', {
-                    id: 'user_profile',
-                    name: "João Silva",
-                    streak: 5,
-                    xp: 1450,
-                    level: 4,
-                    completedWorkoutsMonth: 14
-                });
-
-                // Histórico de Peso
-                const initialWeight = [
-                    { date: "2026-09-01", weight: 81.2, fat: 16.5, arm: 37, waist: 84, chest: 100 },
-                    { date: "2026-09-15", weight: 80.0, fat: 15.8, arm: 37.5, waist: 83, chest: 101 },
-                    { date: "2026-10-01", weight: 79.1, fat: 15.1, arm: 38.0, waist: 82, chest: 101.5 },
-                    { date: "2026-10-15", weight: 78.5, fat: 14.5, arm: 38.5, waist: 81, chest: 102 }
-                ];
-                for (const w of initialWeight) await db.add('peso', w);
-
-                // Evolução de Força
-                const initialStrength = [
-                    { exercise: "Supino Reto com Barra", date: "2026-08-10", load: 70 },
-                    { exercise: "Supino Reto com Barra", date: "2026-09-12", load: 75 },
-                    { exercise: "Supino Reto com Barra", date: "2026-10-15", load: 80 },
-                    { exercise: "Agachamento Livre", date: "2026-08-10", load: 90 },
-                    { exercise: "Agachamento Livre", date: "2026-09-12", load: 100 },
-                    { exercise: "Agachamento Livre", date: "2026-10-15", load: 110 },
-                    { exercise: "Levantamento Terra", date: "2026-08-10", load: 110 },
-                    { exercise: "Levantamento Terra", date: "2026-09-12", load: 120 },
-                    { exercise: "Levantamento Terra", date: "2026-10-15", load: 130 }
-                ];
-                for (const s of initialStrength) await db.add('forca', s);
-
-                // Fichas de Treino
-                await db.put('treinos', {
-                    routineCode: 'A',
-                    title: "Treino A - Peito & Tríceps",
-                    exercises: [
-                        { id: "ex1", name: "Supino Reto com Barra", desc: "Mantenha as escápulas retraídas, pés firmes no chão e desça a barra até ao esterno com controlo.", sets: [ {kg: 80, reps: 10, done: true}, {kg: 80, reps: 8, done: true}, {kg: 80, reps: 8, done: false} ] },
-                        { id: "ex2", name: "Supino Inclinado c/ Halteres", desc: "Ajuste o banco em ~30 graus. Mantenha os cotovelos a 45° do tronco.", sets: [ {kg: 26, reps: 12, done: false}, {kg: 26, reps: 10, done: false} ] },
-                        { id: "ex3", name: "Tríceps na Polia Alta", desc: "Mantenha os cotovelos fixos ao lado do corpo. Estenda totalmente os braços focando na contração.", sets: [ {kg: 35, reps: 12, done: false}, {kg: 35, reps: 12, done: false} ] }
-                    ]
-                });
-
-                await db.put('treinos', {
-                    routineCode: 'B',
-                    title: "Treino B - Costas & Bíceps",
-                    exercises: [
-                        { id: "ex4", name: "Puxada à Frente na Polia", desc: "Puxe a barra em direção ao peito puxando os cotovelos para baixo e para trás.", sets: [ {kg: 65, reps: 10, done: false}, {kg: 65, reps: 10, done: false} ] },
-                        { id: "ex5", name: "Remada Curvada com Barra", desc: "Coluna neutra, inclinação a 45 graus. Puxe a barra em direção ao umbigo.", sets: [ {kg: 60, reps: 10, done: false}, {kg: 60, reps: 10, done: false} ] },
-                        { id: "ex6", name: "Bíceps Direto c/ Barra EZ", desc: "Mantenha a postura ereta sem balançar o tronco durante a execução.", sets: [ {kg: 30, reps: 12, done: false}, {kg: 30, reps: 10, done: false} ] }
-                    ]
-                });
-
-                await db.put('treinos', {
-                    routineCode: 'C',
-                    title: "Treino C - Pernas & Ombros",
-                    exercises: [
-                        { id: "ex7", name: "Agachamento Livre", desc: "Pés à largura dos ombros, joelhos a acompanhar a ponta dos pés, descer com profundidade.", sets: [ {kg: 100, reps: 8, done: false}, {kg: 100, reps: 8, done: false} ] },
-                        { id: "ex8", name: "Prensa de Pernas (Leg Press)", desc: "Empurre a plataforma com os calcanhares sem bloquear totalmente os joelhos.", sets: [ {kg: 180, reps: 12, done: false}, {kg: 180, reps: 10, done: false} ] },
-                        { id: "ex9", name: "Press Militar de Ombros", desc: "Com halteres ou barra, eleve o peso acima da cabeça com o core ativado.", sets: [ {kg: 22, reps: 10, done: false}, {kg: 22, reps: 10, done: false} ] }
-                    ]
-                });
-
-                // Aulas de Grupo
-                const initialClasses = [
-                    { id: 1, name: "Spinning High Energy", instructor: "Prof. Ricardo", time: "Hoje • 18:30", category: "Spinning", spots: 3, totalSpots: 15, booked: false },
-                    { id: 2, name: "Yoga Alignment & Flow", instructor: "Prof.ª Maria", time: "Amanhã • 09:00", category: "Yoga", spots: 5, totalSpots: 10, booked: true },
-                    { id: 3, name: "Pilates Core Focus", instructor: "Prof.ª Sofia", time: "Amanhã • 17:00", category: "Pilates", spots: 2, totalSpots: 12, booked: false },
-                    { id: 4, name: "CrossFit WOD Express", instructor: "Prof. André", time: "Sexta • 19:00", category: "CrossFit", spots: 1, totalSpots: 8, booked: false }
-                ];
-                for (const c of initialClasses) await db.put('aulas', c);
-
-                // Nutrição Hoje
-                const todayKey = new Date().toISOString().split('T')[0];
-                await db.put('nutricao', {
-                    date: todayKey,
-                    water: 2.0,
-                    cals: 1850,
-                    prot: 140,
-                    carbs: 210,
-                    fat: 48
-                });
-            }
+        function dbPut(storeName, item) {
+            return new Promise((resolve) => {
+                if (!db) return resolve(null);
+                const tx = db.transaction(storeName, 'readwrite');
+                const store = tx.objectStore(storeName);
+                const req = store.put(item);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => resolve(null);
+            });
         }
 
-        /* =============================================================
-           3. LÓGICA E REFRESH DA INTERFACE (UI SYNCHRONIZATION)
-           ============================================================= */
+        function dbDelete(storeName, key) {
+            return new Promise((resolve) => {
+                if (!db) return resolve(null);
+                const tx = db.transaction(storeName, 'readwrite');
+                const store = tx.objectStore(storeName);
+                const req = store.delete(key);
+                req.onsuccess = () => resolve(true);
+                req.onerror = () => resolve(false);
+            });
+        }
+
+        /* ----------------------------------------------------
+           APP STATE & INITIALIZATION
+        ---------------------------------------------------- */
         let weightChartInstance = null;
-        let strengthChartInstance = null;
-        let currentActiveRoutine = 'A';
+        let todayStr = new Date().toISOString().split('T')[0];
 
-        async function refreshUI() {
-            const profile = await db.get('perfil', 'user_profile');
-            const todayKey = new Date().toISOString().split('T')[0];
-            let nutricao = await db.get('nutricao', todayKey);
-
-            if (!nutricao) {
-                nutricao = { date: todayKey, water: 0.0, cals: 0, prot: 0, carbs: 0, fat: 0 };
-                await db.put('nutricao', nutricao);
-            }
-
-            // Atualização de Perfil / Dashboard
-            if (profile) {
-                document.getElementById('sidebar-streak').innerText = profile.streak;
-                document.getElementById('mobile-streak').innerText = profile.streak;
-                document.getElementById('dash-workouts-count').innerText = profile.completedWorkoutsMonth || 0;
-                document.getElementById('user-xp').innerText = profile.xp;
-                document.getElementById('user-level').innerText = profile.level;
+        window.onload = async () => {
+            try {
+                await initDB();
+                setupEventListeners();
+                setupTabs();
+                setupPWA();
+                setupTimer();
                 
-                const nextLevelXP = profile.level * 500;
-                const xpPct = Math.min(100, (profile.xp / nextLevelXP) * 100);
-                document.getElementById('user-xp-bar').style.width = `${xpPct}%`;
-                document.getElementById('user-xp-bar-text').innerText = profile.xp;
+                // Check if profile exists
+                const profile = await dbGet('profile', 'user_profile');
+                if (!profile) {
+                    // Open onboarding modal on first run
+                    document.getElementById('modal-onboarding').classList.remove('hidden');
+                } else {
+                    await refreshAllAppData();
+                }
+            } catch (err) {
+                console.error("Initialization error:", err);
+            }
+        };
+
+        async function refreshAllAppData() {
+            const profile = await dbGet('profile', 'user_profile');
+            if (profile) {
+                document.getElementById('header-user-name').textContent = profile.name || 'Atleta';
+                document.getElementById('stat-calorie-goal').textContent = profile.calorieGoal || 2400;
+                document.getElementById('stat-water-goal').textContent = profile.waterGoal || 2500;
             }
 
-            // ÚLTIMO PESO REGISTADO
-            const weights = await db.getAll('peso');
-            if (weights.length > 0) {
-                weights.sort((a, b) => new Date(a.date) - new Date(b.date));
-                const latest = weights[weights.length - 1];
-                document.getElementById('dash-weight').innerText = latest.weight;
-            }
-
-            // DADOS DE NUTRIÇÃO
-            document.getElementById('dash-cals').innerText = nutricao.cals;
-            document.getElementById('dash-water').innerText = nutricao.water.toFixed(1);
-            
-            document.getElementById('cals-ingested').innerText = nutricao.cals;
-            const calsBarPct = Math.min(100, Math.round((nutricao.cals / 2400) * 100));
-            document.getElementById('cals-bar').style.width = `${calsBarPct}%`;
-
-            document.getElementById('prot-ingested').innerText = nutricao.prot;
-            document.getElementById('prot-bar').style.width = `${Math.min(100, (nutricao.prot / 180) * 100)}%`;
-
-            document.getElementById('carbs-ingested').innerText = nutricao.carbs;
-            document.getElementById('carbs-bar').style.width = `${Math.min(100, (nutricao.carbs / 270) * 100)}%`;
-
-            document.getElementById('fat-ingested').innerText = nutricao.fat;
-            document.getElementById('fat-bar').style.width = `${Math.min(100, (nutricao.fat / 65) * 100)}%`;
-
-            document.getElementById('water-intake-val').innerText = nutricao.water.toFixed(1);
-            document.getElementById('water-cups-count').innerText = Math.round(nutricao.water / 0.25);
-
-            // AULAS AGENDADAS NO DASHBOARD
-            const allClasses = await db.getAll('aulas');
-            const bookedList = document.getElementById('dash-booked-classes-list');
-            bookedList.innerHTML = '';
-            const booked = allClasses.filter(c => c.booked);
-
-            if (booked.length === 0) {
-                bookedList.innerHTML = `<p class="text-xs text-slate-500 py-2">Sem aulas agendadas de momento.</p>`;
-            } else {
-                booked.forEach(b => {
-                    const item = document.createElement('div');
-                    item.className = "flex items-center justify-between p-3 bg-slate-800/60 rounded-xl border border-slate-700/50";
-                    item.innerHTML = `
-                        <div>
-                            <p class="text-xs font-bold text-white">${b.name}</p>
-                            <p class="text-[10px] text-slate-400">${b.time}</p>
-                        </div>
-                        <span class="text-[10px] bg-brand-500/20 text-brand-400 px-2 py-0.5 rounded-full font-semibold">Confirmado</span>
-                    `;
-                    bookedList.appendChild(item);
-                });
-            }
-
-            renderAchievements();
+            await renderWeightChartAndStats();
+            await renderWorkouts();
+            await renderRMRecords();
+            await renderClasses();
+            await renderNutrition();
+            await renderRecentActivity();
         }
 
-        /* =============================================================
-           4. TEMPORIZADOR DE DESCANSO
-           ============================================================= */
+        /* ----------------------------------------------------
+           ONBOARDING & PROFILE SETUP
+        ---------------------------------------------------- */
+        function setupEventListeners() {
+            // Profile modal open trigger
+            document.getElementById('btn-open-profile').addEventListener('click', async () => {
+                const profile = await dbGet('profile', 'user_profile') || {};
+                document.getElementById('onboarding-name').value = profile.name || '';
+                document.getElementById('onboarding-weight').value = profile.initialWeight || '';
+                document.getElementById('onboarding-height').value = profile.height || '';
+                document.getElementById('onboarding-goal').value = profile.goal || 'Ganhar Massa Muscular';
+                document.getElementById('onboarding-water-goal').value = profile.waterGoal || 2500;
+                document.getElementById('onboarding-calorie-goal').value = profile.calorieGoal || 2400;
+                document.getElementById('modal-onboarding').classList.remove('hidden');
+            });
+
+            // Onboarding Form Submit
+            document.getElementById('form-onboarding').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('onboarding-name').value;
+                const weight = parseFloat(document.getElementById('onboarding-weight').value);
+                const height = parseInt(document.getElementById('onboarding-height').value);
+                const goal = document.getElementById('onboarding-goal').value;
+                const waterGoal = parseInt(document.getElementById('onboarding-water-goal').value);
+                const calorieGoal = parseInt(document.getElementById('onboarding-calorie-goal').value);
+
+                const profileData = {
+                    id: 'user_profile',
+                    name,
+                    initialWeight: weight,
+                    height,
+                    goal,
+                    waterGoal,
+                    calorieGoal,
+                    updatedAt: new Date().toISOString()
+                };
+
+                await dbPut('profile', profileData);
+
+                // Add initial weight to weightHistory if none exists
+                const existingWeight = await dbGetAll('weightHistory');
+                if (existingWeight.length === 0) {
+                    await dbPut('weightHistory', {
+                        date: todayStr,
+                        weight: weight
+                    });
+                }
+
+                document.getElementById('modal-onboarding').classList.add('hidden');
+                await refreshAllAppData();
+            });
+
+            // Weight Log Form
+            document.getElementById('btn-open-weight-modal').addEventListener('click', () => {
+                document.getElementById('weight-date').value = todayStr;
+                document.getElementById('modal-weight').classList.remove('hidden');
+            });
+
+            document.getElementById('form-weight-log').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const date = document.getElementById('weight-date').value;
+                const weight = parseFloat(document.getElementById('weight-value').value);
+
+                await dbPut('weightHistory', { date, weight });
+                document.getElementById('modal-weight').classList.add('hidden');
+                document.getElementById('weight-value').value = '';
+                await refreshAllAppData();
+            });
+
+            // Workout Log Form
+            document.getElementById('form-workout-log').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const exercise = document.getElementById('workout-exercise-name').value;
+                const sets = parseInt(document.getElementById('workout-sets').value);
+                const reps = parseInt(document.getElementById('workout-reps').value);
+                const weight = parseFloat(document.getElementById('workout-weight').value);
+
+                await dbPut('workouts', {
+                    exercise,
+                    sets,
+                    reps,
+                    weight,
+                    date: todayStr,
+                    timestamp: new Date().getTime()
+                });
+
+                document.getElementById('workout-exercise-name').value = '';
+                document.getElementById('workout-sets').value = '';
+                document.getElementById('workout-reps').value = '';
+                document.getElementById('workout-weight').value = '';
+
+                await refreshAllAppData();
+            });
+
+            // Exercise Library Modal
+            document.getElementById('btn-open-exercise-lib').addEventListener('click', () => {
+                document.getElementById('modal-exercise-lib').classList.remove('hidden');
+            });
+
+            // 1RM Log Form
+            document.getElementById('form-1rm-log').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const exercise = document.getElementById('rm-exercise').value;
+                const weight = parseFloat(document.getElementById('rm-weight').value);
+
+                await dbPut('rmRecords', {
+                    exercise,
+                    weight,
+                    updatedAt: todayStr
+                });
+
+                document.getElementById('rm-exercise').value = '';
+                document.getElementById('rm-weight').value = '';
+                await renderRMRecords();
+            });
+
+            // Class Booking Form
+            document.getElementById('form-class-booking').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const type = document.getElementById('class-type').value;
+                const date = document.getElementById('class-date').value;
+                const time = document.getElementById('class-time').value;
+
+                await dbPut('classes', {
+                    type,
+                    date,
+                    time,
+                    bookedAt: new Date().toISOString()
+                });
+
+                await renderClasses();
+            });
+
+            // Meal Log Form
+            document.getElementById('form-meal-log').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('meal-name').value;
+                const calories = parseInt(document.getElementById('meal-calories').value);
+                const protein = parseInt(document.getElementById('meal-protein').value) || 0;
+
+                await dbPut('meals', {
+                    name,
+                    calories,
+                    protein,
+                    date: todayStr
+                });
+
+                document.getElementById('meal-name').value = '';
+                document.getElementById('meal-calories').value = '';
+                document.getElementById('meal-protein').value = '';
+
+                await renderNutrition();
+                await renderRecentActivity();
+            });
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function selectExercise(name) {
+            document.getElementById('workout-exercise-name').value = name;
+            closeModal('modal-exercise-lib');
+        }
+
+        /* ----------------------------------------------------
+           CHARTS & STATS RENDER
+        ---------------------------------------------------- */
+        async function renderWeightChartAndStats() {
+            const weights = await dbGetAll('weightHistory');
+            weights.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            const labels = weights.map(w => w.date);
+            const dataValues = weights.map(w => w.weight);
+
+            const statWeightEl = document.getElementById('stat-weight');
+            const statWeightDiffEl = document.getElementById('stat-weight-diff');
+
+            if (weights.length > 0) {
+                const latestWeight = weights[weights.length - 1].weight;
+                statWeightEl.textContent = latestWeight.toFixed(1);
+
+                if (weights.length > 1) {
+                    const firstWeight = weights[0].weight;
+                    const diff = (latestWeight - firstWeight).toFixed(1);
+                    const sign = diff >= 0 ? '+' : '';
+                    statWeightDiffEl.textContent = `${sign}${diff} kg desde o início`;
+                    statWeightDiffEl.className = `text-[10px] ${diff <= 0 ? 'text-brand-500' : 'text-orange-400'} mt-1`;
+                } else {
+                    statWeightDiffEl.textContent = 'Apenas 1 registo';
+                }
+            } else {
+                statWeightEl.textContent = '--';
+                statWeightDiffEl.textContent = 'Sem registos';
+            }
+
+            // Render Chart.js
+            const ctx = document.getElementById('weightChart').getContext('2d');
+            if (weightChartInstance) {
+                weightChartInstance.destroy();
+            }
+
+            weightChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Peso Corporal (kg)',
+                        data: dataValues,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#10b981'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(31, 41, 55, 0.5)' },
+                            ticks: { color: '#9ca3af', font: { size: 10 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(31, 41, 55, 0.5)' },
+                            ticks: { color: '#9ca3af', font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        /* ----------------------------------------------------
+           WORKOUTS & 1RM RENDER
+        ---------------------------------------------------- */
+        async function renderWorkouts() {
+            const workouts = await dbGetAll('workouts');
+            document.getElementById('stat-workouts-count').textContent = workouts.length;
+
+            const container = document.getElementById('workout-history-container');
+            if (workouts.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500 italic">O teu histórico está limpo. Adiciona a tua primeira série acima!</p>`;
+                return;
+            }
+
+            workouts.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            container.innerHTML = workouts.map(w => `
+                <div class="p-3 bg-gray-900 border border-dark-border rounded-lg flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-white">${w.exercise}</p>
+                        <p class="text-[11px] text-gray-400">${w.sets} séries x ${w.reps} reps @ <span class="text-brand-500 font-semibold">${w.weight} kg</span></p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] text-gray-500">${w.date}</span>
+                        <button onclick="deleteWorkout(${w.id})" class="text-gray-500 hover:text-red-400 text-xs"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function deleteWorkout(id) {
+            await dbDelete('workouts', id);
+            await refreshAllAppData();
+        }
+
+        async function renderRMRecords() {
+            const records = await dbGetAll('rmRecords');
+            const container = document.getElementById('rm-list');
+
+            if (records.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500 italic">Nenhum recorde de força registado.</p>`;
+                return;
+            }
+
+            container.innerHTML = records.map(r => `
+                <div class="p-2.5 bg-gray-900 border border-dark-border rounded-lg flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-white">${r.exercise}</span>
+                        <span class="text-[10px] text-gray-500 block">${r.updatedAt || ''}</span>
+                    </div>
+                    <span class="text-xs font-extrabold text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded border border-yellow-500/20">${r.weight} kg</span>
+                </div>
+            `).join('');
+        }
+
+        /* ----------------------------------------------------
+           CLASSES RENDER
+        ---------------------------------------------------- */
+        async function renderClasses() {
+            const classes = await dbGetAll('classes');
+            const container = document.getElementById('classes-list-container');
+
+            if (classes.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500 italic col-span-2">Nenhuma aula agendada de momento.</p>`;
+                return;
+            }
+
+            classes.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            container.innerHTML = classes.map(c => `
+                <div class="p-4 bg-gray-900 border border-dark-border rounded-xl flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2.5 bg-brand-500/10 text-brand-500 rounded-lg">
+                            <i class="fa-solid fa-users text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-white">${c.type}</h4>
+                            <p class="text-[11px] text-gray-400"><i class="fa-regular fa-calendar mr-1"></i>${c.date} às ${c.time}</p>
+                        </div>
+                    </div>
+                    <button onclick="cancelClass(${c.id})" class="px-2.5 py-1 bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 text-[10px] font-semibold rounded-lg transition-colors">
+                        Cancelar
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        async function cancelClass(id) {
+            await dbDelete('classes', id);
+            await renderClasses();
+        }
+
+        /* ----------------------------------------------------
+           NUTRITION & WATER RENDER
+        ---------------------------------------------------- */
+        async function renderNutrition() {
+            const profile = await dbGet('profile', 'user_profile') || { waterGoal: 2500, calorieGoal: 2400 };
+
+            // Water calculation for today
+            const waterLog = await dbGet('waterLogs', todayStr) || { date: todayStr, amount: 0 };
+            const currentWater = waterLog.amount || 0;
+
+            document.getElementById('stat-water').textContent = currentWater;
+            document.getElementById('nutrition-water-meta').textContent = `${currentWater} / ${profile.waterGoal} ml`;
+            
+            const waterPct = Math.min(100, Math.round((currentWater / profile.waterGoal) * 100));
+            document.getElementById('water-progress-bar').style.width = `${waterPct}%`;
+
+            // Meals calculation for today
+            const allMeals = await dbGetAll('meals');
+            const todayMeals = allMeals.filter(m => m.date === todayStr);
+
+            const totalCalories = todayMeals.reduce((sum, m) => sum + (m.calories || 0), 0);
+            document.getElementById('stat-calories').textContent = totalCalories;
+
+            const calPct = Math.min(100, Math.round((totalCalories / profile.calorieGoal) * 100));
+            document.getElementById('calorie-progress-bar').style.width = `${calPct}%`;
+
+            const mealsContainer = document.getElementById('meals-list-container');
+            if (todayMeals.length === 0) {
+                mealsContainer.innerHTML = `<p class="text-xs text-gray-500 italic">Nenhuma refeição registada hoje.</p>`;
+                return;
+            }
+
+            mealsContainer.innerHTML = todayMeals.map(m => `
+                <div class="p-3 bg-gray-900 border border-dark-border rounded-lg flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-white">${m.name}</p>
+                        <p class="text-[11px] text-gray-400">${m.protein ? `${m.protein}g Proteína | ` : ''}<span class="text-orange-400 font-medium">${m.calories} kcal</span></p>
+                    </div>
+                    <button onclick="deleteMeal(${m.id})" class="text-gray-500 hover:text-red-400 text-xs"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        async function addWater(amount) {
+            const waterLog = await dbGet('waterLogs', todayStr) || { date: todayStr, amount: 0 };
+            waterLog.amount = (waterLog.amount || 0) + amount;
+            await dbPut('waterLogs', waterLog);
+            await renderNutrition();
+            await renderRecentActivity();
+        }
+
+        async function resetWaterToday() {
+            await dbPut('waterLogs', { date: todayStr, amount: 0 });
+            await renderNutrition();
+        }
+
+        async function deleteMeal(id) {
+            await dbDelete('meals', id);
+            await renderNutrition();
+            await renderRecentActivity();
+        }
+
+        /* ----------------------------------------------------
+           RECENT ACTIVITY
+        ---------------------------------------------------- */
+        async function renderRecentActivity() {
+            const workouts = await dbGetAll('workouts');
+            const meals = await dbGetAll('meals');
+            const container = document.getElementById('recent-activity-list');
+
+            const items = [];
+
+            workouts.forEach(w => {
+                items.push({
+                    type: 'workout',
+                    title: `Treino: ${w.exercise}`,
+                    subtitle: `${w.sets}x${w.reps} @ ${w.weight}kg`,
+                    date: w.date,
+                    icon: 'fa-dumbbell text-brand-500'
+                });
+            });
+
+            meals.forEach(m => {
+                items.push({
+                    type: 'meal',
+                    title: `Refeição: ${m.name}`,
+                    subtitle: `${m.calories} kcal`,
+                    date: m.date,
+                    icon: 'fa-utensils text-orange-400'
+                });
+            });
+
+            if (items.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500 italic">Nenhum registo efetuado ainda. Começa a registar os teus treinos ou refeições!</p>`;
+                return;
+            }
+
+            items.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            container.innerHTML = items.slice(0, 5).map(item => `
+                <div class="p-3 bg-gray-900 border border-dark-border rounded-lg flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2.5">
+                        <i class="fa-solid ${item.icon}"></i>
+                        <div>
+                            <p class="font-bold text-white">${item.title}</p>
+                            <p class="text-[11px] text-gray-400">${item.subtitle}</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] text-gray-500">${item.date}</span>
+                </div>
+            `).join('');
+        }
+
+        /* ----------------------------------------------------
+           NAVIGATION TABS
+        ---------------------------------------------------- */
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => {
+                        t.classList.remove('active', 'border-brand-500', 'text-brand-500');
+                        t.classList.add('text-gray-400', 'border-transparent');
+                    });
+
+                    tab.classList.add('active', 'border-brand-500', 'text-brand-500');
+                    tab.classList.remove('text-gray-400', 'border-transparent');
+
+                    const target = tab.getAttribute('data-target');
+                    contents.forEach(content => {
+                        if (content.id === target) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+        }
+
+        /* ----------------------------------------------------
+           REST TIMER
+        ---------------------------------------------------- */
         let timerInterval = null;
-        let timerSeconds = 90;
-        let isTimerRunning = false;
+        let timerSeconds = 0;
+
+        function setupTimer() {
+            document.getElementById('timer-60').addEventListener('click', () => startTimer(60));
+            document.getElementById('timer-90').addEventListener('click', () => startTimer(90));
+            document.getElementById('timer-120').addEventListener('click', () => startTimer(120));
+            document.getElementById('timer-reset').addEventListener('click', resetTimer);
+        }
+
+        function startTimer(seconds) {
+            clearInterval(timerInterval);
+            timerSeconds = seconds;
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    timerSeconds = 0;
+                }
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timerSeconds = 0;
+            updateTimerDisplay();
+        }
 
         function updateTimerDisplay() {
             const mins = Math.floor(timerSeconds / 60);
             const secs = timerSeconds % 60;
-            document.getElementById('timer-display').innerText = 
-                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            const display = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            document.getElementById('timer-display').textContent = display;
         }
 
-        function toggleTimer() {
-            const btn = document.getElementById('timer-start-btn');
-            if (isTimerRunning) {
-                clearInterval(timerInterval);
-                isTimerRunning = false;
-                btn.innerText = "Iniciar";
-                btn.classList.remove('bg-amber-500');
-                btn.classList.add('bg-brand-500');
-            } else {
-                isTimerRunning = true;
-                btn.innerText = "Pausar";
-                btn.classList.remove('bg-brand-500');
-                btn.classList.add('bg-amber-500');
+        /* ----------------------------------------------------
+           PWA SERVICE WORKER & INSTALL PROMPT
+        ---------------------------------------------------- */
+        let deferredPrompt = null;
 
-                timerInterval = setInterval(() => {
-                    if (timerSeconds > 0) {
-                        timerSeconds--;
-                        updateTimerDisplay();
-                    } else {
-                        clearInterval(timerInterval);
-                        isTimerRunning = false;
-                        btn.innerText = "Iniciar";
-                        btn.classList.remove('bg-amber-500');
-                        btn.classList.add('bg-brand-500');
-                        showToast("🔔 Tempo de descanso concluído! Próxima série!");
-                    }
-                }, 1000);
-            }
-        }
-
-        function setTimerPreset(seconds) {
-            if (isTimerRunning) toggleTimer();
-            timerSeconds = seconds;
-            updateTimerDisplay();
-        }
-
-        function resetTimer() {
-            if (isTimerRunning) toggleTimer();
-            timerSeconds = 90;
-            updateTimerDisplay();
-        }
-
-        /* =============================================================
-           5. GESTÃO DE TREINOS (LOGBOOK)
-           ============================================================= */
-        async function selectRoutine(code) {
-            currentActiveRoutine = code;
-            document.querySelectorAll('.routine-tab-btn').forEach(btn => {
-                btn.classList.remove('bg-brand-500', 'text-black');
-                btn.classList.add('text-slate-400');
-            });
-            const activeBtn = document.getElementById(`btn-routine-${code}`);
-            activeBtn.classList.add('bg-brand-500', 'text-black');
-            activeBtn.classList.remove('text-slate-400');
-
-            await renderWorkoutRoutine(code);
-        }
-
-        async function renderWorkoutRoutine(code) {
-            const routine = await db.get('treinos', code);
-            const container = document.getElementById('workout-routine-container');
-            container.innerHTML = '';
-
-            if (!routine) return;
-
-            routine.exercises.forEach((ex, exIndex) => {
-                const card = document.createElement('div');
-                card.className = "bg-dark-card p-5 rounded-2xl border border-dark-border space-y-4";
-                
-                let setsHTML = '';
-                ex.sets.forEach((set, sIndex) => {
-                    setsHTML += `
-                        <div class="flex items-center justify-between bg-slate-800/50 p-2.5 rounded-xl border border-slate-700/40 text-xs">
-                            <span class="font-bold text-slate-400 w-8">#${sIndex + 1}</span>
-                            <div class="flex items-center space-x-2">
-                                <span class="text-slate-400">Carga:</span>
-                                <input type="number" value="${set.kg}" onchange="updateSetData('${code}', ${exIndex}, ${sIndex}, 'kg', this.value)" class="w-16 bg-slate-700 text-white p-1 rounded text-center outline-none focus:border-brand-500 border border-slate-600">
-                                <span class="text-slate-400">kg</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <span class="text-slate-400">Reps:</span>
-                                <input type="number" value="${set.reps}" onchange="updateSetData('${code}', ${exIndex}, ${sIndex}, 'reps', this.value)" class="w-16 bg-slate-700 text-white p-1 rounded text-center outline-none focus:border-brand-500 border border-slate-600">
-                            </div>
-                            <button onclick="toggleSetDone('${code}', ${exIndex}, ${sIndex})" class="w-8 h-8 rounded-lg flex items-center justify-center transition ${set.done ? 'bg-brand-500 text-black' : 'bg-slate-700 text-slate-400 hover:text-white'}">
-                                <i class="fa-solid fa-check"></i>
-                            </button>
-                        </div>
-                    `;
-                });
-
-                card.innerHTML = `
-                    <div class="flex justify-between items-center">
-                        <h4 class="font-bold text-white text-base">${ex.name}</h4>
-                        <button onclick="openExerciseModal('${ex.name}', '${ex.desc}')" class="text-xs text-brand-400 hover:underline flex items-center gap-1">
-                            <i class="fa-solid fa-circle-info"></i> Técnica / Vídeo
-                        </button>
-                    </div>
-                    <div class="space-y-2">
-                        ${setsHTML}
-                    </div>
-                    <button onclick="addSetToExercise('${code}', ${exIndex})" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold border border-dashed border-slate-600 transition">
-                        + Adicionar Série
-                    </button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        async function updateSetData(code, exIdx, setIdx, field, val) {
-            const routine = await db.get('treinos', code);
-            routine.exercises[exIdx].sets[setIdx][field] = parseFloat(val) || 0;
-            await db.put('treinos', routine);
-            
-            // Regista a carga máxima para a evolução no gráfico
-            if (field === 'kg') {
-                const exName = routine.exercises[exIdx].name;
-                const todayKey = new Date().toISOString().split('T')[0];
-                await db.add('forca', {
-                    exercise: exName,
-                    date: todayKey,
-                    load: parseFloat(val)
+        function setupPWA() {
+            // Service worker registration
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('./sw.js')
+                        .then(reg => console.log('[PWA] Service Worker registrado com sucesso:', reg.scope))
+                        .catch(err => console.log('[PWA] Falha na instalação do SW:', err));
                 });
             }
-        }
 
-        async function toggleSetDone(code, exIdx, setIdx) {
-            const routine = await db.get('treinos', code);
-            const current = routine.exercises[exIdx].sets[setIdx].done;
-            routine.exercises[exIdx].sets[setIdx].done = !current;
-            await db.put('treinos', routine);
-            await renderWorkoutRoutine(code);
-            if (!current) setTimerPreset(90);
-        }
+            // Install prompt banner logic
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                document.getElementById('pwa-install-banner').classList.remove('hidden');
+            });
 
-        async function addSetToExercise(code, exIdx) {
-            const routine = await db.get('treinos', code);
-            const sets = routine.exercises[exIdx].sets;
-            const lastSet = sets[sets.length - 1] || { kg: 20, reps: 10 };
-            sets.push({ kg: lastSet.kg, reps: lastSet.reps, done: false });
-            await db.put('treinos', routine);
-            await renderWorkoutRoutine(code);
-        }
-
-        async function finishWorkout() {
-            const profile = await db.get('perfil', 'user_profile');
-            profile.xp += 50;
-            profile.streak += 1;
-            profile.completedWorkoutsMonth = (profile.completedWorkoutsMonth || 0) + 1;
-            
-            if (profile.xp >= profile.level * 500) {
-                profile.level += 1;
-            }
-
-            await db.put('perfil', profile);
-            await refreshUI();
-            showToast("🎉 Treino guardado no IndexedDB! Ganhou +50 XP!");
-        }
-
-        /* =============================================================
-           6. EVOLUÇÃO E GRÁFICOS (CHART.JS + INDEXEDDB)
-           ============================================================= */
-        async function renderCharts() {
-            // Chart 1: Evolução de Peso Corporal
-            const weights = await db.getAll('peso');
-            weights.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const ctxWeight = document.getElementById('weightChart').getContext('2d');
-            if (weightChartInstance) weightChartInstance.destroy();
-
-            weightChartInstance = new Chart(ctxWeight, {
-                type: 'line',
-                data: {
-                    labels: weights.map(m => m.date),
-                    datasets: [{
-                        label: 'Peso (kg)',
-                        data: weights.map(m => m.weight),
-                        borderColor: '#ccff00',
-                        backgroundColor: 'rgba(204, 255, 0, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#ccff00',
-                        pointRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { color: '#2a2a2a' }, ticks: { color: '#94a3b8' } },
-                        y: { grid: { color: '#2a2a2a' }, ticks: { color: '#94a3b8' } }
-                    }
+            document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`[PWA] Escolha do utilizador: ${outcome}`);
+                    deferredPrompt = null;
+                    document.getElementById('pwa-install-banner').classList.add('hidden');
                 }
             });
 
-            // Chart 2: Evolução de Cargas (Força)
-            const selectedEx = document.getElementById('exercise-chart-select').value;
-            const allStrength = await db.getAll('forca');
-            const filtered = allStrength.filter(s => s.exercise === selectedEx);
-            filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            const ctxStrength = document.getElementById('strengthChart').getContext('2d');
-            if (strengthChartInstance) strengthChartInstance.destroy();
-
-            strengthChartInstance = new Chart(ctxStrength, {
-                type: 'bar',
-                data: {
-                    labels: filtered.map(d => d.date),
-                    datasets: [{
-                        label: 'Carga Máxima (kg)',
-                        data: filtered.map(d => d.load),
-                        backgroundColor: '#00f0ff',
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { color: '#94a3b8' } },
-                        y: { grid: { color: '#2a2a2a' }, ticks: { color: '#94a3b8' } }
-                    }
-                }
-            });
-
-            renderMetricsTable(weights);
-        }
-
-        function renderMetricsTable(weights) {
-            const tbody = document.getElementById('metrics-table-body');
-            tbody.innerHTML = '';
-            const sorted = [...weights].reverse();
-            sorted.forEach(m => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-3 font-medium text-white">${m.date}</td>
-                    <td class="p-3 text-brand-400 font-bold">${m.weight} kg</td>
-                    <td class="p-3">${m.fat || '-'}%</td>
-                    <td class="p-3">${m.arm || '-'} cm</td>
-                    <td class="p-3">${m.waist || '-'} cm</td>
-                    <td class="p-3">${m.chest || '-'} cm</td>
-                `;
-                tbody.appendChild(tr);
+            document.getElementById('pwa-dismiss-btn').addEventListener('click', () => {
+                document.getElementById('pwa-install-banner').classList.add('hidden');
             });
         }
-
-        async function handleMetricSubmit(e) {
-            e.preventDefault();
-            const date = document.getElementById('input-metric-date').value;
-            const weight = parseFloat(document.getElementById('input-metric-weight').value);
-            const fat = parseFloat(document.getElementById('input-metric-fat').value) || null;
-            const arm = parseFloat(document.getElementById('input-metric-arm').value) || null;
-            const waist = parseFloat(document.getElementById('input-metric-waist').value) || null;
-            const chest = parseFloat(document.getElementById('input-metric-chest').value) || null;
-
-            await db.add('peso', { date, weight, fat, arm, waist, chest });
-
-            closeModal('add-metric-modal');
-            await renderCharts();
-            await refreshUI();
-            showToast("📊 Medida gravada permanentemente no IndexedDB!");
-        }
-
-        /* =============================================================
-           7. AULAS DE GRUPO
-           ============================================================= */
-        async function renderClasses(filter = 'all') {
-            const allClasses = await db.getAll('aulas');
-            const container = document.getElementById('classes-grid');
-            container.innerHTML = '';
-
-            allClasses.forEach(c => {
-                if (filter !== 'all' && c.category !== filter) return;
-
-                const card = document.createElement('div');
-                card.className = "bg-dark-card p-5 rounded-2xl border border-dark-border flex flex-col justify-between space-y-4";
-                card.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-xs bg-brand-500/10 text-brand-400 px-2.5 py-1 rounded-full font-semibold border border-brand-500/20">${c.category}</span>
-                            <span class="text-xs text-slate-400"><i class="fa-solid fa-users"></i> ${c.spots}/${c.totalSpots} vagas</span>
-                        </div>
-                        <h4 class="font-bold text-white text-lg">${c.name}</h4>
-                        <p class="text-xs text-slate-400 mt-1"><i class="fa-solid fa-user-tie"></i> ${c.instructor}</p>
-                        <p class="text-xs text-slate-300 mt-2 font-medium"><i class="fa-solid fa-clock text-brand-500"></i> ${c.time}</p>
-                    </div>
-
-                    <button onclick="toggleClassBooking(${c.id})" class="w-full py-2.5 rounded-xl font-bold text-xs transition ${c.booked ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30 hover:bg-rose-500/30' : 'bg-brand-500 hover:bg-brand-600 text-black neon-glow'}">
-                        ${c.booked ? 'Cancelar Reserva' : 'Reservar Lugar'}
-                    </button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function filterClasses(category) {
-            renderClasses(category);
-        }
-
-        async function toggleClassBooking(id) {
-            const cls = await db.get('aulas', id);
-            if (cls) {
-                if (cls.booked) {
-                    cls.booked = false;
-                    cls.spots++;
-                    showToast(`Reserva cancelada para ${cls.name}`);
-                } else {
-                    if (cls.spots > 0) {
-                        cls.booked = true;
-                        cls.spots--;
-                        showToast(`Lugar reservado com sucesso em ${cls.name}!`);
-                    } else {
-                        showToast("⚠️ Aula sem vagas disponíveis!");
-                    }
-                }
-                await db.put('aulas', cls);
-                await renderClasses();
-                await refreshUI();
-            }
-        }
-
-        /* =============================================================
-           8. NUTRIÇÃO E ÁGUA
-           ============================================================= */
-        async function addWater(amount) {
-            const todayKey = new Date().toISOString().split('T')[0];
-            let nutricao = await db.get('nutricao', todayKey);
-            if (!nutricao) {
-                nutricao = { date: todayKey, water: 0, cals: 0, prot: 0, carbs: 0, fat: 0 };
-            }
-            nutricao.water = parseFloat((nutricao.water + amount).toFixed(2));
-            await db.put('nutricao', nutricao);
-            await refreshUI();
-            showToast(`+${amount * 1000}ml de água guardados no IndexedDB! 💧`);
-        }
-
-        async function resetWater() {
-            const todayKey = new Date().toISOString().split('T')[0];
-            let nutricao = await db.get('nutricao', todayKey);
-            if (nutricao) {
-                nutricao.water = 0;
-                await db.put('nutricao', nutricao);
-                await refreshUI();
-            }
-        }
-
-        async function addMeal() {
-            const cals = parseInt(document.getElementById('input-cals').value) || 0;
-            const prot = parseInt(document.getElementById('input-prot').value) || 0;
-            const carbs = parseInt(document.getElementById('input-carbs').value) || 0;
-
-            if (cals > 0 || prot > 0 || carbs > 0) {
-                const todayKey = new Date().toISOString().split('T')[0];
-                let nutricao = await db.get('nutricao', todayKey);
-                if (!nutricao) {
-                    nutricao = { date: todayKey, water: 0, cals: 0, prot: 0, carbs: 0, fat: 0 };
-                }
-                nutricao.cals += cals;
-                nutricao.prot += prot;
-                nutricao.carbs += carbs;
-                
-                await db.put('nutricao', nutricao);
-                await refreshUI();
-
-                document.getElementById('input-cals').value = '';
-                document.getElementById('input-prot').value = '';
-                document.getElementById('input-carbs').value = '';
-                showToast("Refeição registada com sucesso!");
-            }
-        }
-
-        /* =============================================================
-           9. GAMIFICAÇÃO
-           ============================================================= */
-        async function renderAchievements() {
-            const profile = await db.get('perfil', 'user_profile');
-            const streak = profile ? profile.streak : 0;
-
-            const achievements = [
-                { id: "a1", title: "Consistência de Ferro", desc: "Completou 5 dias seguidos de treino", icon: "fa-fire", unlocked: streak >= 5 },
-                { id: "a2", title: "Clube dos 100kg", desc: "Atingiu 100kg num exercício", icon: "fa-dumbbell", unlocked: true },
-                { id: "a3", title: "Mestre da Hidratação", desc: "Bebeu mais de 3.0L de água num dia", icon: "fa-glass-water", unlocked: false },
-                { id: "a4", title: "Atleta de Grupo", desc: "Reservou aulas de grupo no ginásio", icon: "fa-users", unlocked: true }
-            ];
-
-            const container = document.getElementById('badges-container');
-            container.innerHTML = '';
-
-            achievements.forEach(ach => {
-                const card = document.createElement('div');
-                card.className = `p-5 rounded-2xl border ${ach.unlocked ? 'bg-dark-card border-brand-500/40' : 'bg-slate-900/50 border-dark-border opacity-60'} flex items-center space-x-4`;
-                card.innerHTML = `
-                    <div class="w-12 h-12 rounded-xl ${ach.unlocked ? 'bg-brand-500/20 text-brand-400 border border-brand-500/30' : 'bg-slate-800 text-slate-500'} flex items-center justify-center text-xl font-bold">
-                        <i class="fa-solid ${ach.icon}"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-white text-sm">${ach.title}</h4>
-                        <p class="text-xs text-slate-400 mt-0.5">${ach.desc}</p>
-                        <span class="text-[10px] font-semibold ${ach.unlocked ? 'text-brand-400' : 'text-slate-500'} uppercase mt-1 block">
-                            ${ach.unlocked ? 'Desbloqueado' : 'Bloqueado'}
-                        </span>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        /* =============================================================
-           10. NAVEGAÇÃO E MODAIS
-           ============================================================= */
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-btn, .mobile-nav-btn').forEach(btn => {
-                if (btn.getAttribute('data-tab') === tabId) {
-                    btn.classList.add('text-brand-400', 'font-bold');
-                } else {
-                    btn.classList.remove('text-brand-400', 'font-bold');
-                }
-            });
-
-            const selectedTab = document.getElementById(`tab-${tabId}`);
-            if (selectedTab) {
-                selectedTab.classList.add('active');
-            }
-
-            if (tabId === 'metrics') renderCharts();
-            if (tabId === 'classes') renderClasses();
-            if (tabId === 'workouts') renderWorkoutRoutine(currentActiveRoutine);
-            if (tabId === 'achievements') renderAchievements();
-        }
-
-        function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-        }
-
-        function openExerciseModal(title, desc) {
-            document.getElementById('modal-ex-title').innerText = title;
-            document.getElementById('modal-ex-desc').innerText = desc;
-            openModal('exercise-modal');
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast-notification');
-            document.getElementById('toast-message').innerText = msg;
-            toast.classList.remove('translate-y-32');
-            setTimeout(() => {
-                toast.classList.add('translate-y-32');
-            }, 3000);
-        }
-
-        /* =============================================================
-           11. INICIALIZAÇÃO DA APLICAÇÃO
-           ============================================================= */
-        window.onload = async function() {
-            try {
-                // Inicializa IndexedDB
-                await db.init();
-                // Popula se estiver vazio
-                await seedDatabaseIfEmpty();
-                
-                document.getElementById('input-metric-date').value = new Date().toISOString().split('T')[0];
-
-                // Atualiza UI com base nos dados guardados
-                await refreshUI();
-                await renderWorkoutRoutine('A');
-                updateTimerDisplay();
-            } catch (err) {
-                console.error("Erro na inicialização:", err);
-            }
-        };
     </script>
 </body>
 </html>
