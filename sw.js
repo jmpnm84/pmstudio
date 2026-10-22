@@ -10,7 +10,7 @@ const ASSETS_TO_CACHE = [
   'https://cdn.jsdelivr.net/npm/chart.js',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
   'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
-  'https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c'
+  'https://github.com/user-attachments/assets/e00b6488-3b28-4457-aa10-8d5e8e3aa9b7'
 ];
 
 // Instalação do Service Worker e Pre-caching
