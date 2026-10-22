@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PM Studio - O Seu Companion de Treino</title>
+
+    <!-- PWA Manifest & Meta Tags -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#121212">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PM Studio">
+    <link rel="apple-touch-icon" href="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
@@ -86,12 +95,26 @@
 </head>
 <body class="min-h-screen flex flex-col md:flex-row pb-20 md:pb-0 custom-scrollbar">
 
+    <!-- BANNER DE INSTALAÇÃO PWA -->
+    <div id="pwa-install-banner" class="hidden fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-brand-500 to-brand-accent p-3 text-black font-semibold flex items-center justify-between shadow-2xl">
+        <div class="flex items-center space-x-3">
+            <img src="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c" width="32" height="32" alt="PM Studio Logo" class="w-8 h-8 rounded-full border border-emerald-500/30 object-cover">
+            <span class="text-xs md:text-sm font-bold">Instale a aplicação PM Studio no seu dispositivo!</span>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button onclick="installPWA()" class="px-3 py-1 bg-black text-brand-500 hover:bg-slate-900 rounded-lg text-xs font-bold transition">Instalar</button>
+            <button onclick="dismissInstallBanner()" class="p-1 text-black hover:text-slate-800 text-sm">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- BARRA LATERAL (Desktop) -->
     <aside class="hidden md:flex flex-col w-64 bg-dark-card border-r border-dark-border p-5 justify-between h-screen sticky top-0 z-30">
         <div>
             <!-- Logo -->
             <div class="flex items-center space-x-3 mb-8 px-2">
-                <img src="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c" alt="PM Studio Logo" class="w-10 h-10 object-contain rounded-xl border border-dark-border bg-slate-900/50 p-0.5">
+                <img src="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c" width="32" height="32" alt="PM Studio Logo" class="w-8 h-8 rounded-full border border-emerald-500/30 object-cover">
                 <div>
                     <h1 class="text-xl font-bold tracking-wider text-white">PM <span class="text-brand-500">STUDIO</span></h1>
                     <p class="text-xs text-slate-400">Gym & Fitness Companion</p>
@@ -100,7 +123,7 @@
 
             <!-- Navegação Desktop -->
             <nav class="space-y-2">
-                <button onclick="switchTab('dashboard')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-300 hover:bg-dark-hover active-nav" data-tab="dashboard">
+                <button onclick="switchTab('dashboard')" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition text-slate-300 hover:bg-dark-hover active-nav text-brand-400 font-bold" data-tab="dashboard">
                     <i class="fa-solid fa-chart-pie text-lg"></i>
                     <span class="font-medium text-sm">Dashboard</span>
                 </button>
@@ -144,7 +167,7 @@
     <!-- HEADER MOBILE -->
     <header class="md:hidden bg-dark-card border-b border-dark-border p-4 flex justify-between items-center sticky top-0 z-30">
         <div class="flex items-center space-x-2">
-            <img src="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c" alt="PM Studio Logo" class="w-8 h-8 object-contain rounded-lg border border-dark-border bg-slate-900/50 p-0.5">
+            <img src="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c" width="32" height="32" alt="PM Studio Logo" class="w-8 h-8 rounded-full border border-emerald-500/30 object-cover">
             <span class="font-bold text-lg tracking-wider text-white">PM <span class="text-brand-500">STUDIO</span></span>
         </div>
         <div class="flex items-center space-x-3">
@@ -219,7 +242,7 @@
                 <div class="lg:col-span-2 bg-dark-card p-6 rounded-2xl border border-dark-border">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-bold text-lg text-white flex items-center gap-2">
-                            <i class="fa-solid fa-list-check text-brand-500"></i> Próxima Ficha Recomenda
+                            <i class="fa-solid fa-list-check text-brand-500"></i> Próxima Ficha Recomendada
                         </h3>
                         <span class="text-xs bg-brand-500/10 text-brand-400 px-3 py-1 rounded-full border border-brand-500/20 font-medium">Treino A</span>
                     </div>
@@ -407,7 +430,7 @@
         <section id="tab-classes" class="tab-content space-y-6">
             <div>
                 <h2 class="text-2xl font-bold text-white">Aulas de Grupo</h2>
-                <p class="text-slate-400 text-sm">Ganta o seu lugar nas aulas de Spinning, Yoga, Pilates e Crossfit.</p>
+                <p class="text-slate-400 text-sm">Garanta o seu lugar nas aulas de Spinning, Yoga, Pilates e Crossfit.</p>
             </div>
 
             <!-- Filtros -->
@@ -576,7 +599,7 @@
 
     <!-- NAVEGAÇÃO INFERIOR MOBILE -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-dark-card border-t border-dark-border px-2 py-2 flex justify-around items-center z-40">
-        <button onclick="switchTab('dashboard')" class="mobile-nav-btn p-2 text-center text-slate-400 hover:text-brand-400 active-nav" data-tab="dashboard">
+        <button onclick="switchTab('dashboard')" class="mobile-nav-btn p-2 text-center text-slate-400 hover:text-brand-400 active-nav text-brand-400 font-bold" data-tab="dashboard">
             <i class="fa-solid fa-chart-pie text-lg block"></i>
             <span class="text-[10px] mt-0.5 block">Inicio</span>
         </button>
@@ -674,6 +697,51 @@
         <i class="fa-solid fa-circle-check text-lg"></i>
         <span id="toast-message" class="text-sm">Ação efetuada com sucesso!</span>
     </div>
+
+    <!-- REGISTO DO SERVICE WORKER & SUPORTE PWA -->
+    <script>
+        let deferredPrompt;
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((reg) => {
+                        console.log('[PWA] Service Worker registado com sucesso:', reg.scope);
+                    })
+                    .catch((err) => {
+                        console.error('[PWA] Falha ao registar Service Worker:', err);
+                    });
+            });
+        }
+
+        // Evento do Prompt de Instalação PWA
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const banner = document.getElementById('pwa-install-banner');
+            if (banner) banner.classList.remove('hidden');
+        });
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('[PWA] Utilizador aceitou a instalação.');
+                    } else {
+                        console.log('[PWA] Utilizador rejeitou a instalação.');
+                    }
+                    deferredPrompt = null;
+                    dismissInstallBanner();
+                });
+            }
+        }
+
+        function dismissInstallBanner() {
+            const banner = document.getElementById('pwa-install-banner');
+            if (banner) banner.classList.add('hidden');
+        }
+    </script>
 
     <!-- LÓGICA JAVASCRIPT & WRAPPER NATIVO INDEXEDDB -->
     <script>
