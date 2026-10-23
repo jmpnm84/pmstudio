@@ -127,18 +127,24 @@
             </nav>
         </div>
 
-        <!-- Perfil na Sidebar -->
-        <div class="pt-4 border-t border-dark-border flex items-center space-x-3 px-2">
-            <div id="sidebar-avatar" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-brand-500 border border-brand-500/30 shrink-0">
-                --
-            </div>
-            <div class="truncate flex-1">
-                <p id="sidebar-name" class="text-sm font-semibold text-white truncate">--</p>
-                <p class="text-xs text-brand-500 flex items-center gap-1">
-                    <i class="fa-solid fa-fire"></i> <span id="sidebar-streak">0</span> dias seguidos
-                </p>
-                <!-- Versão adicionada -->
-                <p class="text-[10px] text-slate-500 font-mono mt-0.5">v0.0.1</p>
+        <!-- Perfil e Botão de Sincronização na Sidebar -->
+        <div class="pt-4 border-t border-dark-border space-y-3">
+            <button onclick="syncAthleteDataToGoogleDrive()" class="w-full py-2.5 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 font-semibold rounded-xl text-xs transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Sincronizar Google Drive
+            </button>
+            
+            <div class="flex items-center space-x-3 px-2">
+                <div id="sidebar-avatar" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-brand-500 border border-brand-500/30 shrink-0">
+                    --
+                </div>
+                <div class="truncate flex-1">
+                    <p id="sidebar-name" class="text-sm font-semibold text-white truncate">--</p>
+                    <p class="text-xs text-brand-500 flex items-center gap-1">
+                        <i class="fa-solid fa-fire"></i> <span id="sidebar-streak">0</span> dias seguidos
+                    </p>
+                    <!-- Versão adicionada -->
+                    <p class="text-[10px] text-slate-500 font-mono mt-0.5">v0.0.1</p>
+                </div>
             </div>
         </div>
     </aside>
@@ -149,16 +155,18 @@
             <img src="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c" alt="PM Studio Logo" class="w-8 h-8 object-contain rounded-lg border border-dark-border bg-slate-900/50 p-0.5">
             <span class="font-bold text-lg tracking-wider text-white">PM <span class="text-brand-500">STUDIO</span></span>
         </div>
-        <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-2">
+            <button onclick="syncAthleteDataToGoogleDrive()" title="Sincronizar Google Drive" class="p-2 bg-blue-600/20 text-blue-400 rounded-xl border border-blue-500/30 text-xs">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+            </button>
             <div class="bg-slate-800 px-3 py-1 rounded-full border border-dark-border flex items-center space-x-1.5 text-xs text-brand-400 font-medium">
                 <i class="fa-solid fa-fire text-amber-500"></i>
-                <span id="mobile-streak">0</span> dias
+                <span id="mobile-streak">0</span> d
             </div>
             <div class="flex flex-col items-center">
                 <div id="mobile-avatar" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-xs text-brand-500 border border-brand-500/30">
                     --
                 </div>
-                <!-- Versão adicionada para Mobile -->
                 <span class="text-[9px] text-slate-500 font-mono -mt-0.5">v0.0.1</span>
             </div>
         </div>
@@ -1468,7 +1476,60 @@
         }
 
         /* =============================================================
-           10. NAVEGAÇÃO E MODAIS
+           10. SINCRONIZAÇÃO CUMULATIVA COM GOOGLE DRIVE
+           ============================================================= */
+        async function syncAthleteDataToGoogleDrive() {
+            const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwg0YBjv4_djqq6Nl4GqxYhbG-OKTGLf1S_nQaRGgOSPXFwZcHiRhkSmZUcOuYZ3rA_jA/exec";
+
+            try {
+                // 1. Obter perfil do atleta para saber o nome do ficheiro JSON
+                const profile = await db.get('perfil', 'user_profile');
+                if (!profile || !profile.name) {
+                    showToast("⚠️ Configure primeiro o seu perfil antes de sincronizar!");
+                    return;
+                }
+
+                showToast("☁️ A enviar dados para o Google Drive...");
+
+                // 2. Extrair dados de todas as stores do IndexedDB
+                const pesoData = await db.getAll('peso');
+                const forcaData = await db.getAll('forca');
+                const treinosData = await db.getAll('treinos');
+                const nutricaoData = await db.getAll('nutricao');
+
+                // 3. Montar o pacote de dados
+                const payloadData = {
+                    athleteName: profile.name,
+                    payload: {
+                        profile: profile,
+                        peso: pesoData,
+                        forca: forcaData,
+                        treinos: treinosData,
+                        nutricao: nutricaoData,
+                        lastSync: new Date().toISOString()
+                    }
+                };
+
+                // 4. Enviar requisição POST para o Apps Script
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payloadData)
+                });
+
+                showToast(`✅ Ficheiro '${profile.name}.json' sincronizado no Drive!`);
+
+            } catch (error) {
+                console.error("Erro na sincronização:", error);
+                showToast("❌ Falha na conexão ao Google Drive.");
+            }
+        }
+
+        /* =============================================================
+           11. NAVEGAÇÃO E MODAIS
            ============================================================= */
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -1511,11 +1572,11 @@
             toast.classList.remove('translate-y-32');
             setTimeout(() => {
                 toast.classList.add('translate-y-32');
-            }, 3000);
+            }, 3500);
         }
 
         /* =============================================================
-           11. INICIALIZAÇÃO DA APLICAÇÃO
+           12. INICIALIZAÇÃO DA APLICAÇÃO
            ============================================================= */
         window.onload = async function() {
             try {
