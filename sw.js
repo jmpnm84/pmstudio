@@ -1,29 +1,23 @@
-// Service Worker para PM Studio PWA
 const CACHE_NAME = 'pm-studio-v1';
 
-// Recursos críticos para cache offline
+// Apenas ficheiros locais crus. Remova CDNs daqui!
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
-  './manifest.json',
-  'https://cdn.tailwindcss.com',
-  'https://cdn.jsdelivr.net/npm/chart.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
-  'https://github.com/user-attachments/assets/e00b6488-3b28-4457-aa10-8d5e8e3aa9b7'
+  './manifest.json'
 ];
 
-// Instalação do Service Worker e Pre-caching
+// Instalação
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[Service Worker] Pré-cacheando recursos da aplicação...');
+      console.log('[Service Worker] Pré-cacheando recursos locais...');
       return cache.addAll(ASSETS_TO_CACHE);
     }).then(() => self.skipWaiting())
   );
 });
 
-// Ativação e Limpeza de caches antigos
+// Ativação
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -39,9 +33,8 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Estratégia de Fetch: Cache First com Network Fallback
+// Fetch (Cache First com Network Fallback)
 self.addEventListener('fetch', (event) => {
-  // Ignora requisições que não sejam GET
   if (event.request.method !== 'GET') return;
 
   event.respondWith(
@@ -50,16 +43,18 @@ self.addEventListener('fetch', (event) => {
         return cachedResponse;
       }
       return fetch(event.request).then((networkResponse) => {
-        // Se a resposta for válida, armazena em cache dinâmico
-        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
+        // Validação segura para cache dinâmico
+        if (!networkResponse || networkResponse.status !== 200) {
+          return networkResponse;
         }
+        
+        const responseToCache = networkResponse.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
+
         return networkResponse;
       }).catch(() => {
-        // Fallback offline se necessário
         if (event.request.headers.get('accept').includes('text/html')) {
           return caches.match('./index.html');
         }
