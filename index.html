@@ -615,8 +615,7 @@
             <span class="text-[10px] mt-0.5 block">Desafios</span>
         </button>
     </nav>
-
-    <!-- MODAL PRIMEIRA INICIALIZAÇÃO (ONBOARDING) -->
+<!-- MODAL PRIMEIRA INICIALIZAÇÃO (ONBOARDING) -->
     <div id="onboarding-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-dark-card border border-brand-500/30 p-6 md:p-8 rounded-2xl w-full max-w-lg space-y-5 relative shadow-2xl">
             <div class="text-center space-y-2">
@@ -1175,7 +1174,6 @@
             routine.exercises[exIdx].sets[setIdx][field] = parseFloat(val) || 0;
             await db.put('treinos', routine);
             
-            // Regista a carga máxima para a evolução no gráfico
             if (field === 'kg') {
                 const exName = routine.exercises[exIdx].name;
                 const todayKey = new Date().toISOString().split('T')[0];
@@ -1226,7 +1224,6 @@
            6. EVOLUÇÃO E GRÁFICOS (CHART.JS + INDEXEDDB)
            ============================================================= */
         async function renderCharts() {
-            // Chart 1: Evolução de Peso Corporal
             const weights = await db.getAll('peso');
             weights.sort((a, b) => new Date(a.date) - new Date(b.date));
 
@@ -1260,7 +1257,6 @@
                 }
             });
 
-            // Chart 2: Evolução de Cargas (Força)
             const selectedEx = document.getElementById('exercise-chart-select').value;
             const allStrength = await db.getAll('forca');
             const filtered = allStrength.filter(s => s.exercise === selectedEx);
@@ -1476,13 +1472,12 @@
         }
 
         /* =============================================================
-           10. SINCRONIZAÇÃO CUMULATIVA COM GOOGLE DRIVE
+           10. SINCRONIZAÇÃO CUMULATIVA COM GOOGLE DRIVE (CORRIGIDA)
            ============================================================= */
         async function syncAthleteDataToGoogleDrive() {
             const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwg0YBjv4_djqq6Nl4GqxYhbG-OKTGLf1S_nQaRGgOSPXFwZcHiRhkSmZUcOuYZ3rA_jA/exec";
 
             try {
-                // 1. Obter perfil do atleta para saber o nome do ficheiro JSON
                 const profile = await db.get('perfil', 'user_profile');
                 if (!profile || !profile.name) {
                     showToast("⚠️ Configure primeiro o seu perfil antes de sincronizar!");
@@ -1491,13 +1486,12 @@
 
                 showToast("☁️ A enviar dados para o Google Drive...");
 
-                // 2. Extrair dados de todas as stores do IndexedDB
                 const pesoData = await db.getAll('peso');
                 const forcaData = await db.getAll('forca');
                 const treinosData = await db.getAll('treinos');
                 const nutricaoData = await db.getAll('nutricao');
+                const aulasData = await db.getAll('aulas'); // Inclui as aulas reservadas
 
-                // 3. Montar o pacote de dados
                 const payloadData = {
                     athleteName: profile.name,
                     payload: {
@@ -1506,11 +1500,11 @@
                         forca: forcaData,
                         treinos: treinosData,
                         nutricao: nutricaoData,
+                        aulas: aulasData, // Sincronizado para o PT conseguir ver
                         lastSync: new Date().toISOString()
                     }
                 };
 
-                // 4. Enviar requisição POST para o Apps Script
                 await fetch(WEB_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -1580,17 +1574,13 @@
            ============================================================= */
         window.onload = async function() {
             try {
-                // Inicializa IndexedDB
                 await db.init();
-                // Popula estrutura base (fichas e aulas) se vazias
                 await setupBaseStructuresIfEmpty();
                 
                 document.getElementById('input-metric-date').value = new Date().toISOString().split('T')[0];
 
-                // Verifica se é a primeira utilização para abrir o formulário de onboarding
                 await checkFirstTimeUser();
 
-                // Atualiza UI com base nos dados guardados
                 await refreshUI();
                 await renderWorkoutRoutine('A');
                 updateTimerDisplay();
