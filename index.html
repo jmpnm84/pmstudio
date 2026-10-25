@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PM Studio - O Seu Companion de Treino</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Metas de Tema e Aplicação Móvel -->
+    <meta name="theme-color" content="#121212">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Favicon para evitar erros 404 -->
+    <link rel="icon" href="https://github.com/user-attachments/assets/accbe46e-a329-43fa-ae13-b47ee6b2c18c" type="image/png">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
@@ -129,6 +141,13 @@
 
         <!-- Perfil e Botão de Sincronização na Sidebar -->
         <div class="pt-4 border-t border-dark-border space-y-3">
+            <!-- Botão de Instalação PWA na Sidebar (Desktop) -->
+            <div id="install-container-desktop" class="hidden">
+                <button id="btn-install-desktop" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-lg cursor-pointer">
+                    <i class="fa-solid fa-download"></i> Instalar App
+                </button>
+            </div>
+
             <button onclick="syncAthleteDataToGoogleDrive()" class="w-full py-2.5 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 border border-blue-500/30 font-semibold rounded-xl text-xs transition flex items-center justify-center gap-2">
                 <i class="fa-solid fa-cloud-arrow-up"></i> Sincronizar Google Drive
             </button>
@@ -142,8 +161,7 @@
                     <p class="text-xs text-brand-500 flex items-center gap-1">
                         <i class="fa-solid fa-fire"></i> <span id="sidebar-streak">0</span> dias seguidos
                     </p>
-                    <!-- Versão adicionada -->
-                    <p class="text-[10px] text-slate-500 font-mono mt-0.5">v0.0.1</p>
+                    <p class="text-[10px] text-slate-500 font-mono mt-0.5">v0.1.1 (PWA)</p>
                 </div>
             </div>
         </div>
@@ -156,6 +174,12 @@
             <span class="font-bold text-lg tracking-wider text-white">PM <span class="text-brand-500">STUDIO</span></span>
         </div>
         <div class="flex items-center space-x-2">
+            <!-- Botão Instalar Mobile no Header -->
+            <div id="install-container-mobile" class="hidden">
+                <button id="btn-install-mobile" class="p-2 bg-emerald-600 text-white rounded-xl text-xs shadow-lg flex items-center justify-center">
+                    <i class="fa-solid fa-download"></i>
+                </button>
+            </div>
             <button onclick="syncAthleteDataToGoogleDrive()" title="Sincronizar Google Drive" class="p-2 bg-blue-600/20 text-blue-400 rounded-xl border border-blue-500/30 text-xs">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
             </button>
@@ -233,7 +257,7 @@
                 <div class="lg:col-span-2 bg-dark-card p-6 rounded-2xl border border-dark-border">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="font-bold text-lg text-white flex items-center gap-2">
-                            <i class="fa-solid fa-list-check text-brand-500"></i> Próxima Ficha Recomenda
+                            <i class="fa-solid fa-list-check text-brand-500"></i> Próxima Ficha Recomendada
                         </h3>
                         <span class="text-xs bg-brand-500/10 text-brand-400 px-3 py-1 rounded-full border border-brand-500/20 font-medium">Treino A</span>
                     </div>
@@ -351,7 +375,7 @@
         <section id="tab-metrics" class="tab-content space-y-6">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-white">Evolução & Gráficos DE Progressão</h2>
+                    <h2 class="text-2xl font-bold text-white">Evolução & Gráficos de Progressão</h2>
                     <p class="text-slate-400 text-sm">Acompanhe o seu progresso físico e ganho de força gravados em IndexedDB.</p>
                 </div>
                 <button onclick="openModal('add-metric-modal')" class="px-4 py-2.5 bg-brand-500 hover:bg-brand-600 text-black font-bold rounded-xl text-sm transition flex items-center gap-2 neon-glow">
@@ -421,7 +445,7 @@
         <section id="tab-classes" class="tab-content space-y-6">
             <div>
                 <h2 class="text-2xl font-bold text-white">Aulas de Grupo</h2>
-                <p class="text-slate-400 text-sm">Ganta o seu lugar nas aulas de Spinning, Yoga, Pilates e Crossfit.</p>
+                <p class="text-slate-400 text-sm">Garanta o seu lugar nas aulas de Spinning, Yoga, Pilates e Crossfit.</p>
             </div>
 
             <!-- Filtros -->
@@ -615,7 +639,8 @@
             <span class="text-[10px] mt-0.5 block">Desafios</span>
         </button>
     </nav>
-<!-- MODAL PRIMEIRA INICIALIZAÇÃO (ONBOARDING) -->
+
+    <!-- MODAL PRIMEIRA INICIALIZAÇÃO (ONBOARDING) -->
     <div id="onboarding-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 backdrop-blur-md">
         <div class="bg-dark-card border border-brand-500/30 p-6 md:p-8 rounded-2xl w-full max-w-lg space-y-5 relative shadow-2xl">
             <div class="text-center space-y-2">
@@ -738,8 +763,55 @@
         <span id="toast-message" class="text-sm">Ação efetuada com sucesso!</span>
     </div>
 
-    <!-- LÓGICA JAVASCRIPT & WRAPPER NATIVO INDEXEDDB -->
+    <!-- LÓGICA JAVASCRIPT, SERVICE WORKER E PWA PROMPT -->
     <script>
+        /* =============================================================
+           0. REGISTO DO SERVICE WORKER E GESTÃO DE INSTALAÇÃO PWA
+           ============================================================= */
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((reg) => console.log('[PWA] Service Worker registado com sucesso:', reg.scope))
+                    .catch((err) => console.error('[PWA] Falha ao registar o Service Worker:', err));
+            });
+        }
+
+        let deferredPrompt;
+        const installContainerDesktop = document.getElementById('install-container-desktop');
+        const btnInstallDesktop = document.getElementById('btn-install-desktop');
+        const installContainerMobile = document.getElementById('install-container-mobile');
+        const btnInstallMobile = document.getElementById('btn-install-mobile');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Mostrar botões de instalação
+            if (installContainerDesktop) installContainerDesktop.classList.remove('hidden');
+            if (installContainerMobile) installContainerMobile.classList.remove('hidden');
+        });
+
+        async function triggerInstall() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`[PWA] Resposta do utilizador: ${outcome}`);
+            if (outcome === 'accepted') {
+                if (installContainerDesktop) installContainerDesktop.classList.add('hidden');
+                if (installContainerMobile) installContainerMobile.classList.add('hidden');
+            }
+            deferredPrompt = null;
+        }
+
+        if (btnInstallDesktop) btnInstallDesktop.addEventListener('click', triggerInstall);
+        if (btnInstallMobile) btnInstallMobile.addEventListener('click', triggerInstall);
+
+        window.addEventListener('appinstalled', () => {
+            console.log('[PWA] Aplicação instalada com sucesso!');
+            if (installContainerDesktop) installContainerDesktop.classList.add('hidden');
+            if (installContainerMobile) installContainerMobile.classList.add('hidden');
+        });
+
+
         /* =============================================================
            1. WRAPPER PROMISSIFICADO DE INDEXEDDB
            ============================================================= */
@@ -758,35 +830,29 @@
                     request.onupgradeneeded = (e) => {
                         const db = e.target.result;
 
-                        // Store 1: Peso e Medidas
                         if (!db.objectStoreNames.contains('peso')) {
                             const pesoStore = db.createObjectStore('peso', { keyPath: 'id', autoIncrement: true });
                             pesoStore.createIndex('date', 'date', { unique: false });
                         }
 
-                        // Store 2: Evolução de Força
                         if (!db.objectStoreNames.contains('forca')) {
                             const forcaStore = db.createObjectStore('forca', { keyPath: 'id', autoIncrement: true });
                             forcaStore.createIndex('exercise', 'exercise', { unique: false });
                             forcaStore.createIndex('date', 'date', { unique: false });
                         }
 
-                        // Store 3: Fichas e Histórico de Treinos
                         if (!db.objectStoreNames.contains('treinos')) {
                             db.createObjectStore('treinos', { keyPath: 'routineCode' });
                         }
 
-                        // Store 4: Aulas de Grupo
                         if (!db.objectStoreNames.contains('aulas')) {
                             db.createObjectStore('aulas', { keyPath: 'id' });
                         }
 
-                        // Store 5: Nutrição e Hidratação Diária
                         if (!db.objectStoreNames.contains('nutricao')) {
                             db.createObjectStore('nutricao', { keyPath: 'date' });
                         }
 
-                        // Store 6: Perfil do Utilizador
                         if (!db.objectStoreNames.contains('perfil')) {
                             db.createObjectStore('perfil', { keyPath: 'id' });
                         }
@@ -862,7 +928,6 @@
         async function setupBaseStructuresIfEmpty() {
             const treinos = await db.getAll('treinos');
             if (treinos.length === 0) {
-                // Fichas de Treino Base
                 await db.put('treinos', {
                     routineCode: 'A',
                     title: "Treino A - Peito & Tríceps",
@@ -896,7 +961,6 @@
 
             const aulas = await db.getAll('aulas');
             if (aulas.length === 0) {
-                // Aulas de Grupo
                 const initialClasses = [
                     { id: 1, name: "Spinning High Energy", instructor: "Prof. Ricardo", time: "Hoje • 18:30", category: "Spinning", spots: 3, totalSpots: 15, booked: false },
                     { id: 2, name: "Yoga Alignment & Flow", instructor: "Prof.ª Maria", time: "Amanhã • 09:00", category: "Yoga", spots: 5, totalSpots: 10, booked: false },
@@ -925,7 +989,6 @@
 
             if (!name || isNaN(weight)) return;
 
-            // Guardar Perfil
             await db.put('perfil', {
                 id: 'user_profile',
                 name: name,
@@ -935,7 +998,6 @@
                 completedWorkoutsMonth: 0
             });
 
-            // Guardar Peso e Medidas Iniciais
             const todayKey = new Date().toISOString().split('T')[0];
             await db.add('peso', { date: todayKey, weight, fat, arm, waist, chest });
 
@@ -972,7 +1034,6 @@
                 await db.put('nutricao', nutricao);
             }
 
-            // Atualização de Perfil / Dashboard
             if (profile) {
                 document.getElementById('sidebar-name').innerText = profile.name;
                 document.getElementById('dash-greeting-name').innerText = profile.name.split(' ')[0];
@@ -991,7 +1052,6 @@
                 document.getElementById('user-xp-bar-text').innerText = profile.xp || 0;
             }
 
-            // ÚLTIMO PESO REGISTADO
             const weights = await db.getAll('peso');
             if (weights.length > 0) {
                 weights.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -1001,7 +1061,6 @@
                 document.getElementById('dash-weight').innerText = '--';
             }
 
-            // DADOS DE NUTRIÇÃO
             document.getElementById('dash-cals').innerText = nutricao.cals;
             document.getElementById('dash-water').innerText = nutricao.water.toFixed(1);
             
@@ -1021,7 +1080,6 @@
             document.getElementById('water-intake-val').innerText = nutricao.water.toFixed(1);
             document.getElementById('water-cups-count').innerText = Math.round(nutricao.water / 0.25);
 
-            // AULAS AGENDADAS NO DASHBOARD
             const allClasses = await db.getAll('aulas');
             const bookedList = document.getElementById('dash-booked-classes-list');
             bookedList.innerHTML = '';
@@ -1472,7 +1530,7 @@
         }
 
         /* =============================================================
-           10. SINCRONIZAÇÃO CUMULATIVA COM GOOGLE DRIVE (CORRIGIDA)
+           10. SINCRONIZAÇÃO CUMULATIVA COM GOOGLE DRIVE
            ============================================================= */
         async function syncAthleteDataToGoogleDrive() {
             const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwg0YBjv4_djqq6Nl4GqxYhbG-OKTGLf1S_nQaRGgOSPXFwZcHiRhkSmZUcOuYZ3rA_jA/exec";
@@ -1490,7 +1548,7 @@
                 const forcaData = await db.getAll('forca');
                 const treinosData = await db.getAll('treinos');
                 const nutricaoData = await db.getAll('nutricao');
-                const aulasData = await db.getAll('aulas'); // Inclui as aulas reservadas
+                const aulasData = await db.getAll('aulas');
 
                 const payloadData = {
                     athleteName: profile.name,
@@ -1500,7 +1558,7 @@
                         forca: forcaData,
                         treinos: treinosData,
                         nutricao: nutricaoData,
-                        aulas: aulasData, // Sincronizado para o PT conseguir ver
+                        aulas: aulasData,
                         lastSync: new Date().toISOString()
                     }
                 };
