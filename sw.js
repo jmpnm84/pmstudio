@@ -1,13 +1,13 @@
 const CACHE_NAME = 'pm-studio-v1';
 
-// Apenas ficheiros locais crus. Remova CDNs daqui!
+// Apenas ficheiros locais essenciais para evitar falhas de CORS no pré-cache
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json'
 ];
 
-// Instalação
+// Instalação do Service Worker e Pre-caching
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -17,7 +17,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Ativação
+// Ativação e Limpeza de caches antigas
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -33,7 +33,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch (Cache First com Network Fallback)
+// Estratégia de Fetch: Cache First com Network Fallback
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
